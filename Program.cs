@@ -1,6 +1,10 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using Fribergs_Alpha.Components;
 using Fribergs_Alpha.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Fribergs_Alpha
 {
@@ -21,6 +25,14 @@ namespace Fribergs_Alpha
             builder.Services.AddTransient<IAdmin, AdminRepository>();
             builder.Services.AddTransient<ICar, CarRepository>();
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
+
+            builder.Services
+                .AddBlazorise(options =>
+                {
+                    options.Immediate = true;
+                })
+                .AddBootstrapProviders()
+                .AddFontAwesomeIcons();
 
             var app = builder.Build();
 
