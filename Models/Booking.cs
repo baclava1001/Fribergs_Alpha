@@ -8,7 +8,7 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Booking ID")]
         public int BookingId { get; set; }
         [Required]
-        public Car BookedCar { get; set; }
+        public Car? Car { get; set; }
         [DisplayName("Pick-up Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
         public DateOnly PickUpDate { get; set; }
         [DisplayName("Return Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
@@ -16,7 +16,7 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Total Sum")]
         public double? TotalSum { get; set; }
         [DisplayName("Customer"), Required]
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
         [DisplayName("Employee")]
         public string? AdministratorName { get; set; }
 
