@@ -7,7 +7,7 @@ namespace Fribergs_Alpha.Data
         IEnumerable<CarCategory> GetAllCarCategories();
         CarCategory GetCarCategoryById(int? id);
         void AddCarCategory(CarCategory carCategory);
-        void UpdateCarCategory(CarCategory carCategory, int id);
-        void DeleteCarCategory(int? id);
+        void UpdateCarCategory(CarCategory carCategory);
+        void DeleteCarCategory(CarCategory carCategory);
     }
 }

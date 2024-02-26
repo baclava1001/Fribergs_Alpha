@@ -16,6 +16,11 @@ namespace Fribergs_Alpha
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationConnectionString") ?? throw new InvalidOperationException("Connection string 'ApplicationConnectionString' not found.")));
+            builder.Services.AddTransient<IBooking, BookingRepository>();
+            builder.Services.AddTransient<ICustomer, CustomerRepository>();
+            builder.Services.AddTransient<IAdmin, AdminRepository>();
+            builder.Services.AddTransient<ICar, CarRepository>();
+            builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
 
             var app = builder.Build();
 

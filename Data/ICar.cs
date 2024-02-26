@@ -7,7 +7,7 @@ namespace Fribergs_Alpha.Data
         IEnumerable<Car> GetAllCars();
         Car GetCarById(int? id);
         void AddCar(Car car);
-        void UpdateCar(Car car, int id);
-        void DeleteCar(int? id);
+        void UpdateCar(Car car);
+        void DeleteCar(Car car);
     }
 }
