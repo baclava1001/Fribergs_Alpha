@@ -1,10 +1,11 @@
 using Fribergs_Alpha.Components;
+using Fribergs_Alpha.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fribergs_Alpha
 {
     public class Program
     {
-       
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ namespace Fribergs_Alpha
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+              options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationConnectionString") ?? throw new InvalidOperationException("Connection string 'ApplicationConnectionString' not found.")));
 
             var app = builder.Build();
 
