@@ -17,7 +17,7 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Price per day"), Required]
         public double PricePerDay { get; set; }
         [DisplayName("Category"), Required]
-        public CarCategory? Category { get; set; }
+        public Booking? Category { get; set; }
         [DisplayName("Picture")]
         public string CarPicUrl { get; set; } = "";
     }
