@@ -1,9 +1,7 @@
-using Blazorise;
-using Blazorise.Bootstrap;
-using Blazorise.Icons.FontAwesome;
-using Fribergs_Alpha.Components;
+﻿using Fribergs_Alpha.Components;
 using Fribergs_Alpha.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Fribergs_Alpha
@@ -20,19 +18,13 @@ namespace Fribergs_Alpha
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationConnectionString") ?? throw new InvalidOperationException("Connection string 'ApplicationConnectionString' not found.")));
+
+            builder.Services.AddQuickGridEntityFrameworkAdapter();;
             builder.Services.AddTransient<IBooking, BookingRepository>();
             builder.Services.AddTransient<ICustomer, CustomerRepository>();
             builder.Services.AddTransient<IAdmin, AdminRepository>();
             builder.Services.AddTransient<ICar, CarRepository>();
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
-
-            builder.Services
-                .AddBlazorise(options =>
-                {
-                    options.Immediate = true;
-                })
-                .AddBootstrapProviders()
-                .AddFontAwesomeIcons();
 
             var app = builder.Build();
 

@@ -1,0 +1,53 @@
+﻿@page "/carcategories/delete"
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CarCategory</h4>
+    <hr />
+    @if (carcategory is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Category</dt>
+            <dd class="col-sm-10">@carcategory.Category</dd>
+        </dl>
+        <EditForm method="post" Model="carcategory" OnValidSubmit="DeleteCarCategory" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(carcategory is null)">Delete</button> |
+            <a href="/carcategories">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    CarCategory? carcategory;
+
+    [SupplyParameterFromQuery]
+    public int CarCategoryId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        carcategory = await DB.CarCategories.FirstOrDefaultAsync(m => m.CarCategoryId == CarCategoryId);
+
+        if (carcategory is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteCarCategory()
+    {
+        DB.CarCategories.Remove(carcategory!);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/carcategories");
+    }
+}

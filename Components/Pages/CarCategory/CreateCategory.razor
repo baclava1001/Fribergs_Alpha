@@ -1,0 +1,43 @@
+﻿@page "/carcategories/create"
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>CarCategory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="CarCategory" OnValidSubmit="AddCarCategory" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="category" class="form-label">Category:</label> 
+                <InputText id="category" @bind-Value="CarCategory.Category" class="form-control" /> 
+                <ValidationMessage For="() => CarCategory.Category" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/carcategories">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public CarCategory CarCategory { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddCarCategory()
+    {
+        DB.CarCategories.Add(CarCategory);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/carcategories");
+    }
+}
