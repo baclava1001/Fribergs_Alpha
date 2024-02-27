@@ -1,19 +1,30 @@
 ﻿@page "/login"
+@using Fribergs_Alpha.Services
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using System.Security.Claims
+@using Fribergs_Alpha.Models
 
+@inject UserAuthService AuthService
 @inject NavigationManager NavigationManager
 
 
 <h3>Login</h3>
 
-<EditForm method="post" OnSubmit="UserLoginAsync" Model="UserLoginData" FormName="LoginUser">
-    <InputText @bind-Value="UserLoginData.Email" Placeholder="Email"></InputText>
-    <InputText @bind-Value="UserLoginData.Password" Placeholder="Password"></InputText>
+@if (AuthResult.AuthSuccess)
+{
+    <span class="alert alert-danger">@AuthResult.ErrorMessage</span>
+}
+@if (!UserLoggedIn)
+{
+    <span class="text-success">You successfully logged out</span>
+}
+
+<EditForm method="post" OnSubmit="UserLoginAsync" Model="Credentials" FormName="LoginUser">
+    <InputText @bind-Value="Credentials.Email" Placeholder="Email"></InputText>
+    <InputText @bind-Value="Credentials.Password" Placeholder="Password"></InputText>
     <button type="submit">Login</button>
 </EditForm>
-
 
 
 
@@ -24,14 +35,37 @@
     public HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromForm]
-    public UserLoginData UserLoginData { get; set; } = new UserLoginData();
+    public LoginCredentials Credentials { get; set; } = new LoginCredentials();
+
+    public AuthResult AuthResult { get; set; } = new AuthResult();
+
+    public bool UserLoggedIn { get; set; }
 
 
     public async Task UserLoginAsync()
     {
-        
+        var authResult = AuthService.UserLogin(Credentials);
 
+        if (authResult.AuthSuccess)
+        {
+            await HttpContext.SignInAsync(authResult.IdentityClaims);
 
+            UserLoggedIn = true;
+            NavigationManager.NavigateTo(authResult.RedirectPath);
+        }
+        else
+        {
+            // Print out authResult.ErrorMessage.
+        }
     }
+
+    public async Task UserLogoutAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        UserLoggedIn = false;
+        // NavigationManager.NavigateTo("/");
+    }
+
 
 }

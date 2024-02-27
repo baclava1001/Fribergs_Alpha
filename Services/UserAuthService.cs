@@ -1,32 +1,32 @@
 ﻿using Fribergs_Alpha.Data;
-using Microsoft.AspNetCore.Authentication;
+using Fribergs_Alpha.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 
 namespace Fribergs_Alpha.Services
 {
-    public class AuthenticationService
+    public class UserAuthService
     {
         private readonly CustomerRepository _customerRepo;
         private readonly AdminRepository _adminRepo;
 
 
 
-        public AuthenticationService(CustomerRepository customerRepo, AdminRepository adminRepo)
+        public UserAuthService(CustomerRepository customerRepo, AdminRepository adminRepo)
         {
             _customerRepo = customerRepo;
             _adminRepo = adminRepo;
         }
 
 
-        public ClaimsPrincipal UserLogin(string email, string password)
+        public AuthResult UserLogin(LoginCredentials credentials)
         {
-            var result = new LoginResult();
+            var result = new AuthResult();
             var claims = new List<Claim>();
             var userIdentity = new ClaimsPrincipal();
 
-            var customer = _customerRepo.GetCustomerByEmail(email);
-            if (customer != null && customer.Password == password)
+            var customer = _customerRepo.GetCustomerByEmail(credentials.Email);
+            if (customer != null && customer.Password == credentials.Password)
             {
                 claims.Add(new Claim(type: ClaimTypes.Role, "Customer"));
                 claims.Add(new Claim(type: ClaimTypes.UserData, customer.CustomerId.ToString()));
@@ -35,8 +35,8 @@ namespace Fribergs_Alpha.Services
             }
             else if (customer == null)
             {
-                var admin = _adminRepo.GetAdminByEmail(email);
-                if (admin != null && admin.Password == password)
+                var admin = _adminRepo.GetAdminByEmail(credentials.Email);
+                if (admin != null && admin.Password == credentials.Password)
                 {
                     claims.Add(new Claim(type: ClaimTypes.Role, "Admin"));
                     claims.Add(new Claim(type: ClaimTypes.UserData, admin.AdminId.ToString()));
@@ -50,28 +50,18 @@ namespace Fribergs_Alpha.Services
             }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            userIdentity = new ClaimsPrincipal(identity);
+            result.IdentityClaims = new ClaimsPrincipal(identity);
 
-            return userIdentity;
+            return result;
         }
-
-        public ClaimsPrincipal UserLogout()
-        {
-            //AuthenticationHttpContextExtensions.SignOutAsync
-
-            //return 
-        }
-
-
-
-
-        public class LoginResult
-        {
-            public bool LoginSuccess { get; set; }
-            public string RedirectPath { get; set; } = string.Empty;
-            public string ErrorMessage { get; set; } = string.Empty;
-
-        }
+       
+        //public class AuthResult
+        //{
+        //    public bool AuthSuccess { get; set; }
+        //    public string RedirectPath { get; set; } = string.Empty;
+        //    public string ErrorMessage { get; set; } = string.Empty;
+        //    public ClaimsPrincipal IdentityClaims { get; set; } = default!;
+        //}
     }
 
 }

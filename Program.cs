@@ -3,6 +3,7 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Fribergs_Alpha.Components;
 using Fribergs_Alpha.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +37,9 @@ namespace Fribergs_Alpha
                     x.SlidingExpiration = true;
                 });
 
+            // Login authentication service that takes in user credentials and returns identityclaims.
+            builder.Services.AddScoped<AuthenticationService>();
+
             // Authorization policies with role claims.
             builder.Services.AddAuthorization(options =>
             {
@@ -45,6 +49,9 @@ namespace Fribergs_Alpha
 
             // Provide authentication to all render render modes.
             builder.Services.AddCascadingAuthenticationState();
+
+          
+            
 
             builder.Services
                 .AddBlazorise(options =>
