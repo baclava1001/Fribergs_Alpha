@@ -1,6 +1,7 @@
 ﻿@page "/CarCategories/edit"
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
+@using Fribergs_Alpha.Data
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
 
@@ -38,15 +39,18 @@ else
 </div>
 
 @code {
+    // Get parameters from form input
     [SupplyParameterFromQuery]
     public int CarCategoryId { get; set; }
 
     [SupplyParameterFromForm]
     public CarCategory? CarCategory { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    // When page loads, get CarCategory by id
+    protected override void OnInitialized()
     {
-        CarCategory ??= await DB.CarCategories.FirstOrDefaultAsync(m => m.CarCategoryId == CarCategoryId);
+        // Send id to repository method and retrieve the category
+        CarCategory ??= carCategoryRepository.GetCarCategoryById(CarCategoryId);
 
         if (CarCategory is null)
         {
@@ -56,13 +60,13 @@ else
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see https://aka.ms/RazorPagesCRUD.
-    public async Task UpdateCarCategory()
+    public void UpdateCarCategory()
     {
-        DB.Attach(CarCategory!).State = EntityState.Modified;
+        //DB.Attach(CarCategory!).State = EntityState.Modified;
 
         try
         {
-            await DB.SaveChangesAsync();
+            carCategoryRepository.UpdateCarCategory(CarCategory);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -79,8 +83,8 @@ else
         NavigationManager.NavigateTo("/carcategories");
     }
 
-    bool CarCategoryExists(int carcategoryid)
+    bool CarCategoryExists(int carcategoryId)
     {
-        return DB.CarCategories.Any(e => e.CarCategoryId == carcategoryid);
+        return carCategoryRepository.GetAllCarCategories().Any(e => e.CarCategoryId == carcategoryId);
     }
 }
