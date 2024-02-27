@@ -1,0 +1,11 @@
+﻿@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "AdminRoleRequired")]
+
+<h3>Admin</h3>
+
+<span>You are currently in the Admin section</span>
+
+@code {
+
+}

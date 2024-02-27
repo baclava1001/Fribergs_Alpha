@@ -7,12 +7,12 @@ namespace Fribergs_Alpha.Services
 {
     public class UserAuthService
     {
-        private readonly CustomerRepository _customerRepo;
-        private readonly AdminRepository _adminRepo;
+        private readonly ICustomer _customerRepo;
+        private readonly IAdmin _adminRepo;
 
 
 
-        public UserAuthService(CustomerRepository customerRepo, AdminRepository adminRepo)
+        public UserAuthService(ICustomer customerRepo, IAdmin adminRepo)
         {
             _customerRepo = customerRepo;
             _adminRepo = adminRepo;
@@ -41,6 +41,7 @@ namespace Fribergs_Alpha.Services
                     claims.Add(new Claim(type: ClaimTypes.Role, "Admin"));
                     claims.Add(new Claim(type: ClaimTypes.UserData, admin.AdminId.ToString()));
 
+                    result.AuthSuccess = true;
                     result.RedirectPath = "/admin";
                 }
             }
@@ -54,15 +55,6 @@ namespace Fribergs_Alpha.Services
 
             return result;
         }
-       
-        //public class AuthResult
-        //{
-        //    public bool AuthSuccess { get; set; }
-        //    public string RedirectPath { get; set; } = string.Empty;
-        //    public string ErrorMessage { get; set; } = string.Empty;
-        //    public ClaimsPrincipal IdentityClaims { get; set; } = default!;
-        //}
     }
-
 }
 

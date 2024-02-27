@@ -15,10 +15,6 @@
 {
     <span class="alert alert-danger">@AuthResult.ErrorMessage</span>
 }
-@if (!UserLoggedIn)
-{
-    <span class="text-success">You successfully logged out</span>
-}
 
 <EditForm method="post" OnSubmit="UserLoginAsync" Model="Credentials" FormName="LoginUser">
     <InputText @bind-Value="Credentials.Email" Placeholder="Email"></InputText>
@@ -39,7 +35,6 @@
 
     public AuthResult AuthResult { get; set; } = new AuthResult();
 
-    public bool UserLoggedIn { get; set; }
 
 
     public async Task UserLoginAsync()
@@ -48,9 +43,8 @@
 
         if (authResult.AuthSuccess)
         {
-            await HttpContext.SignInAsync(authResult.IdentityClaims);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, authResult.IdentityClaims);
 
-            UserLoggedIn = true;
             NavigationManager.NavigateTo(authResult.RedirectPath);
         }
         else
@@ -62,9 +56,8 @@
     public async Task UserLogoutAsync()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-        UserLoggedIn = false;
-        // NavigationManager.NavigateTo("/");
+       
+        //NavigationManager.NavigateTo("/");
     }
 
 

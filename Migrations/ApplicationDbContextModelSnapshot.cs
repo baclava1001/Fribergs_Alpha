@@ -4,7 +4,6 @@ using Fribergs_Alpha.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fribergs_Alpha.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240227094337_sameds-first")]
-    partial class samedsfirst
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +228,7 @@ namespace Fribergs_Alpha.Migrations
             modelBuilder.Entity("Fribergs_Alpha.Models.Car", b =>
                 {
                     b.HasOne("Fribergs_Alpha.Models.CarCategory", "Category")
-                        .WithMany("Cars")
+                        .WithMany()
                         .HasForeignKey("CategoryCarCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -242,11 +239,6 @@ namespace Fribergs_Alpha.Migrations
             modelBuilder.Entity("Fribergs_Alpha.Models.Admin", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Fribergs_Alpha.Models.CarCategory", b =>
-                {
-                    b.Navigation("Cars");
                 });
 
             modelBuilder.Entity("Fribergs_Alpha.Models.Customer", b =>
