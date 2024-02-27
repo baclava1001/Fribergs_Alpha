@@ -1,0 +1,22 @@
+﻿@page "/carcategories"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="carcategories/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.CarCategories">
+    <PropertyColumn Property="carcategory => carcategory.Category" />
+
+    <TemplateColumn Context="carcategory">
+        <a href="@($"carcategories/edit?carcategoryid={carcategory.CarCategoryId}")">Edit</a> |
+        <a href="@($"carcategories/details?carcategoryid={carcategory.CarCategoryId}")">Details</a> |
+        <a href="@($"carcategories/delete?carcategoryid={carcategory.CarCategoryId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

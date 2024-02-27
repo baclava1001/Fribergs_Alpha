@@ -1,0 +1,45 @@
+﻿@page "/carcategories/details"
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>CarCategory</h4>
+    <hr />
+    @if (carcategory is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Category</dt>
+            <dd class="col-sm-10">@carcategory.Category</dd>
+        </dl>
+        <div>
+            <a href="@($"/carcategories/edit?carcategoryid={carcategory.CarCategoryId}")">Edit</a> |
+            <a href="@($"/carcategories")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    CarCategory? carcategory;
+
+    [SupplyParameterFromQuery]
+    public int CarCategoryId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        carcategory = await DB.CarCategories.FirstOrDefaultAsync(m => m.CarCategoryId == CarCategoryId);
+
+        if (carcategory is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -4,6 +4,5 @@
     {
         public int CarCategoryId { get; set; }
         public string Category { get; set; } = "";
-        public List<Car>? Cars { get; }
     }
 }

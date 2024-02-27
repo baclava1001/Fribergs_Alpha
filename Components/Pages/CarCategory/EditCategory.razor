@@ -1,0 +1,86 @@
+﻿@page "/CarCategories/edit"
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>CarCategory</h4>
+<hr />
+@if (CarCategory is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="CarCategory" OnValidSubmit="UpdateCarCategory" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="CarCategory.CarCategoryId" value="@CarCategory.CarCategoryId" />
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category:</label>
+                    <InputText id="category" @bind-Value="CarCategory.Category" class="form-control" />
+                    <ValidationMessage For="() => CarCategory.Category" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/carcategories">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int CarCategoryId { get; set; }
+
+    [SupplyParameterFromForm]
+    public CarCategory? CarCategory { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CarCategory ??= await DB.CarCategories.FirstOrDefaultAsync(m => m.CarCategoryId == CarCategoryId);
+
+        if (CarCategory is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateCarCategory()
+    {
+        DB.Attach(CarCategory!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CarCategoryExists(CarCategory!.CarCategoryId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/carcategories");
+    }
+
+    bool CarCategoryExists(int carcategoryid)
+    {
+        return DB.CarCategories.Any(e => e.CarCategoryId == carcategoryid);
+    }
+}
