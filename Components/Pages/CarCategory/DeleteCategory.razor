@@ -1,6 +1,7 @@
 ﻿@page "/carcategories/delete"
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
+@using Fribergs_Alpha.Data
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
 
@@ -12,42 +13,41 @@
 <div>
     <h4>CarCategory</h4>
     <hr />
-    @if (carcategory is null)
+    @if (carCategory is null)
     {
         <p><em>Loading...</em></p>
     }
     else {
         <dl class="row">
             <dt class="col-sm-2">Category</dt>
-            <dd class="col-sm-10">@carcategory.Category</dd>
+            <dd class="col-sm-10">@carCategory.Category</dd>
         </dl>
-        <EditForm method="post" Model="carcategory" OnValidSubmit="DeleteCarCategory" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(carcategory is null)">Delete</button> |
+        <EditForm method="post" Model="carCategory" OnValidSubmit="DeleteCarCategory" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(carCategory is null)">Delete</button> |
             <a href="/carcategories">Back to List</a>
         </EditForm>
     }
 </div>
 
 @code {
-    CarCategory? carcategory;
+    CarCategory? carCategory;
 
     [SupplyParameterFromQuery]
     public int CarCategoryId { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        carcategory = await DB.CarCategories.FirstOrDefaultAsync(m => m.CarCategoryId == CarCategoryId);
+        carCategory = carCategoryRepository.GetCarCategoryById(CarCategoryId);
 
-        if (carcategory is null)
+        if (carCategory is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
     }
 
-    public async Task DeleteCarCategory()
+    public void DeleteCarCategory()
     {
-        DB.CarCategories.Remove(carcategory!);
-        await DB.SaveChangesAsync();
+        carCategoryRepository.DeleteCarCategory(carCategory);
         NavigationManager.NavigateTo("/carcategories");
     }
 }
