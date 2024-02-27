@@ -1,0 +1,37 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using System.Security.Claims
+
+@inject NavigationManager NavigationManager
+
+
+<h3>Login</h3>
+
+<EditForm method="post" OnSubmit="UserLoginAsync" Model="UserLoginData" FormName="LoginUser">
+    <InputText @bind-Value="UserLoginData.Email" Placeholder="Email"></InputText>
+    <InputText @bind-Value="UserLoginData.Password" Placeholder="Password"></InputText>
+    <button type="submit">Login</button>
+</EditForm>
+
+
+
+
+
+
+@code {
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    public UserLoginData UserLoginData { get; set; } = new UserLoginData();
+
+
+    public async Task UserLoginAsync()
+    {
+        
+
+
+    }
+
+}

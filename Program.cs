@@ -3,6 +3,7 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Fribergs_Alpha.Components;
 using Fribergs_Alpha.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,6 +27,25 @@ namespace Fribergs_Alpha
             builder.Services.AddTransient<ICar, CarRepository>();
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
 
+            // Cookie-based authentication.
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(x =>
+                {
+                    x.LoginPath = "/login";
+                    x.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                    x.SlidingExpiration = true;
+                });
+
+            // Authorization policies with role claims.
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminRoleRequired", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("CustomerRoleRequired", policy => policy.RequireRole("Customer"));
+            });
+
+            // Provide authentication to all render render modes.
+            builder.Services.AddCascadingAuthenticationState();
+
             builder.Services
                 .AddBlazorise(options =>
                 {
@@ -47,6 +67,11 @@ namespace Fribergs_Alpha
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
             app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
