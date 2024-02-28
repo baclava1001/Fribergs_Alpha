@@ -38,9 +38,9 @@
             </NotAuthorized>
             <Authorized>
                 <div class="nav-item px-3">
-                    <button @onclick="UserLogoutAsync" class="nav-link">
+                    <NavLink class="nav-link" href="logout">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
-                    </button>
+                    </NavLink>
                 </div>
 
             </Authorized>
@@ -49,16 +49,3 @@
     </nav>
 </div>
 
-@code{
-
-    [CascadingParameter]
-    public HttpContext HttpContext { get; set; } = default!;
-
-    public async Task UserLogoutAsync()
-    {
-        Console.WriteLine("Button clicked!");
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-        NavigationManager.NavigateTo("/");
-    }
-}
