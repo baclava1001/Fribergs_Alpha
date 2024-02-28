@@ -1,0 +1,17 @@
+﻿@page "/logout"
+@inject NavigationManager NavigationManager
+
+
+    <h3>Logging out...</h3>
+
+
+@code {
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        NavigationManager.NavigateTo("/");
+    }
+}

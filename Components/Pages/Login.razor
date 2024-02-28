@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using System.Security.Claims
 @using Fribergs_Alpha.Models
+@using System.ComponentModel.DataAnnotations
+@using System.ComponentModel
 
 @inject UserAuthService AuthService
 @inject NavigationManager NavigationManager
@@ -11,15 +13,27 @@
 
 <h3>Login</h3>
 
+<br/>
+
 @if (!AuthResult.AuthSuccess)
 {
-    <span style="color:red">@AuthResult.ErrorMessage</span>
+    <span class="text-danger">@AuthResult.ErrorMessage</span>
 }
 
-<EditForm method="post" OnSubmit="UserLoginAsync" Model="Credentials" FormName="LoginUser">
-    <InputText @bind-Value="Credentials.Email" Placeholder="Email"></InputText>
-    <InputText @bind-Value="Credentials.Password" Placeholder="Password"></InputText>
-    <button type="submit">Login</button>
+<EditForm method="post" Model="Credentials" OnValidSubmit="UserLoginAsync" FormName="LoginUser" Enhance>
+    <DataAnnotationsValidator />
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email:</label>
+            <InputText @bind-Value="Credentials.Email" Placeholder="Email" class="form-control" />
+            <ValidationMessage For="() => Credentials.Email" class="text-danger" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password:</label>
+            <InputText @bind-Value="Credentials.Password" Placeholder="Password" type="password" class="form-control" />
+            <ValidationMessage For="() => Credentials.Password" />
+        </div>
+        <button type="submit">Login</button>
 </EditForm>
 
 
@@ -52,9 +66,9 @@
     // public async Task UserLogoutAsync()
     // {
     //     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-       
+
     //     NavigationManager.NavigateTo("/");
     // }
 
-
+   
 }
