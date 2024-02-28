@@ -5,7 +5,7 @@
 namespace Fribergs_Alpha.Migrations
 {
     /// <inheritdoc />
-    public partial class samedsfirst : Migration
+    public partial class Samedsfirst : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

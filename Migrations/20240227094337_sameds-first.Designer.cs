@@ -13,7 +13,7 @@ namespace Fribergs_Alpha.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240227094337_sameds-first")]
-    partial class samedsfirst
+    partial class Samedsfirst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -12,7 +12,7 @@
     <a href="carcategories/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="carCategories">
+<QuickGrid Class="table" Items="GetCategoryList()">
     <PropertyColumn Property="carcategory => carcategory.Category" />
 
     <TemplateColumn Context="carcategory">
@@ -26,8 +26,8 @@
 
     IQueryable<CarCategory>? carCategories;
 
-    protected void OnInitialized()
+    protected IQueryable<CarCategory>? GetCategoryList()
     {
-        carCategories = carCategoryRepository.GetAllCarCategories().AsQueryable();
+        return carCategories = carCategoryRepository.GetAllCarCategories().AsQueryable();
     }
 }

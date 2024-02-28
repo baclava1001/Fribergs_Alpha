@@ -13,7 +13,7 @@ namespace Fribergs_Alpha.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240226124125_initaltwo")]
-    partial class initaltwo
+    partial class Initaltwo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -5,7 +5,7 @@
 namespace Fribergs_Alpha.Migrations
 {
     /// <inheritdoc />
-    public partial class initaltwo : Migration
+    public partial class Initaltwo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
