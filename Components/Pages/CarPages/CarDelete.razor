@@ -1,0 +1,80 @@
+﻿@page "/cars/delete"
+@inject ICar carRepository
+@using Fribergs_Alpha.Models
+@using Fribergs_Alpha.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Car</h4>
+    <hr />
+    @if (car is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Brand</dt>
+            <dd class="col-sm-10">@car.Brand</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CarModel</dt>
+            <dd class="col-sm-10">@car.CarModel</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Year</dt>
+            <dd class="col-sm-10">@car.Year</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Color</dt>
+            <dd class="col-sm-10">@car.Color</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@car.Description</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">PricePerDay</dt>
+            <dd class="col-sm-10">@car.PricePerDay</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CarPicUrl</dt>
+            <dd class="col-sm-10">@car.CarPicUrl</dd>
+        </dl>
+        <EditForm method="post" Model="car" OnValidSubmit="DeleteCar" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(car is null)">Delete</button> |
+            <a href="/cars">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    Car? car;
+
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        car = carRepository.GetCarById(CarId);
+
+        if (car is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public void DeleteCar()
+    {
+        if (car != null)
+        {
+            carRepository.DeleteCar(car!);
+            NavigationManager.NavigateTo("/cars");
+        }
+    }
+}

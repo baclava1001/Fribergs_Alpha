@@ -1,0 +1,118 @@
+﻿@page "/Cars/edit"
+@inject ICar carRepository
+@using Fribergs_Alpha.Data
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Car</h4>
+<hr />
+@if (Car is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Car" OnValidSubmit="UpdateCar" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Car.CarId" value="@Car.CarId" />
+                <div class="mb-3">
+                    <label for="brand" class="form-label">Brand:</label>
+                    <InputText id="brand" @bind-Value="Car.Brand" class="form-control" />
+                    <ValidationMessage For="() => Car.Brand" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="carmodel" class="form-label">CarModel:</label>
+                    <InputText id="carmodel" @bind-Value="Car.CarModel" class="form-control" />
+                    <ValidationMessage For="() => Car.CarModel" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="year" class="form-label">Year:</label>
+                    <InputNumber id="year" @bind-Value="Car.Year" class="form-control" />
+                    <ValidationMessage For="() => Car.Year" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="color" class="form-label">Color:</label>
+                    <InputText id="color" @bind-Value="Car.Color" class="form-control" />
+                    <ValidationMessage For="() => Car.Color" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="Car.Description" class="form-control" />
+                    <ValidationMessage For="() => Car.Description" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="priceperday" class="form-label">PricePerDay:</label>
+                    <InputNumber id="priceperday" @bind-Value="Car.PricePerDay" class="form-control" />
+                    <ValidationMessage For="() => Car.PricePerDay" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="carpicurl" class="form-label">CarPicUrl:</label>
+                    <InputText id="carpicurl" @bind-Value="Car.CarPicUrl" class="form-control" />
+                    <ValidationMessage For="() => Car.CarPicUrl" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/cars">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Car? Car { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Car ??= carRepository.GetCarById(CarId);
+
+        if (Car is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public void UpdateCar()
+    {
+        // carRepository.UpdateCar(Car!).State = EntityState.Modified;
+
+        try
+        {
+            carRepository.UpdateCar(Car);
+
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CarExists(Car!.CarId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/cars");
+    }
+
+    bool CarExists(int carid)
+    {
+        return carRepository.GetAllCars().Any(e => e.CarId == carid);
+    }
+}

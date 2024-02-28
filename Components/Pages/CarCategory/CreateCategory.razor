@@ -1,5 +1,7 @@
 ﻿@page "/carcategories/create"
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@* @inject Fribergs_Alpha.Data.ApplicationDbContext DB *@
+@inject ICarCategory CarCategoryRepository
+@using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
 
@@ -30,14 +32,15 @@
 
 @code {
 
+
     [SupplyParameterFromForm]
     public CarCategory CarCategory { get; set; } = new();
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-    public async Task AddCarCategory()
+    public void AddCarCategory(/* CarCategory carCategory */)
     {
-        DB.CarCategories.Add(CarCategory);
-        await DB.SaveChangesAsync();
+        var carCategory = CarCategory; 
+        CarCategoryRepository.AddCarCategory(carCategory);        
         NavigationManager.NavigateTo("/carcategories");
     }
 }

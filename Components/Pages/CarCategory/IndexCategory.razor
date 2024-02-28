@@ -1,6 +1,7 @@
 ﻿@page "/carcategories"
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Data
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
 
 <PageTitle>Index</PageTitle>
@@ -11,7 +12,7 @@
     <a href="carcategories/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="DB.CarCategories">
+<QuickGrid Class="table" Items="GetCategoryList()">
     <PropertyColumn Property="carcategory => carcategory.Category" />
 
     <TemplateColumn Context="carcategory">
@@ -20,3 +21,13 @@
         <a href="@($"carcategories/delete?carcategoryid={carcategory.CarCategoryId}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
+
+@code{
+
+    IQueryable<CarCategory>? carCategories;
+
+    protected IQueryable<CarCategory>? GetCategoryList()
+    {
+        return carCategories = carCategoryRepository.GetAllCarCategories().AsQueryable();
+    }
+}
