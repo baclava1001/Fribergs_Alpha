@@ -47,7 +47,7 @@ namespace Fribergs_Alpha
                 options.AddPolicy("CustomerRoleRequired", policy => policy.RequireRole("Customer").RequireAuthenticatedUser());
             });
 
-            // Provide authentication to all render render modes.
+            // Provide authentication to all component render modes.
             builder.Services.AddCascadingAuthenticationState();
 
             // Login authentication service that takes in user credentials and returns identityclaims.
