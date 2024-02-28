@@ -1,0 +1,73 @@
+﻿@page "/cars/create"
+@inject ICar carRepository
+@using Fribergs_Alpha.Models
+@using Fribergs_Alpha.Data
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Car</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="@Car" OnValidSubmit="AddCar" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="brand" class="form-label">Brand:</label> 
+                <InputText id="brand" @bind-Value="Car.Brand" class="form-control" /> 
+                <ValidationMessage For="() => Car.Brand" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="carmodel" class="form-label">CarModel:</label> 
+                <InputText id="carmodel" @bind-Value="Car.CarModel" class="form-control" /> 
+                <ValidationMessage For="() => Car.CarModel" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="year" class="form-label">Year:</label> 
+                <InputNumber id="year" @bind-Value="Car.Year" class="form-control" /> 
+                <ValidationMessage For="() => Car.Year" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="color" class="form-label">Color:</label> 
+                <InputText id="color" @bind-Value="Car.Color" class="form-control" /> 
+                <ValidationMessage For="() => Car.Color" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="Car.Description" class="form-control" /> 
+                <ValidationMessage For="() => Car.Description" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="priceperday" class="form-label">PricePerDay:</label> 
+                <InputNumber id="priceperday" @bind-Value="Car.PricePerDay" class="form-control" /> 
+                <ValidationMessage For="() => Car.PricePerDay" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="carpicurl" class="form-label">CarPicUrl:</label> 
+                <InputText id="carpicurl" @bind-Value="Car.CarPicUrl" class="form-control" /> 
+                <ValidationMessage For="() => Car.CarPicUrl" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/cars">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Car Car { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public void AddCar()
+    {
+        carRepository.AddCar(Car);
+        NavigationManager.NavigateTo("/cars");
+    }
+}

@@ -1,0 +1,58 @@
+﻿@page "/cars/details"
+@inject ICar carRepository
+@using Fribergs_Alpha.Data
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Car</h4>
+    <hr />
+    @if (car is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Brand</dt>
+            <dd class="col-sm-10">@car.Brand</dd>
+            <dt class="col-sm-2">CarModel</dt>
+            <dd class="col-sm-10">@car.CarModel</dd>
+            <dt class="col-sm-2">Year</dt>
+            <dd class="col-sm-10">@car.Year</dd>
+            <dt class="col-sm-2">Color</dt>
+            <dd class="col-sm-10">@car.Color</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@car.Description</dd>
+            <dt class="col-sm-2">PricePerDay</dt>
+            <dd class="col-sm-10">@car.PricePerDay</dd>
+            <dt class="col-sm-2">CarPicUrl</dt>
+            <dd class="col-sm-10">@car.CarPicUrl</dd>
+        </dl>
+        <div>
+            <a href="@($"/cars/edit?carid={car.CarId}")">Edit</a> |
+            <a href="@($"/cars")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Car? car;
+
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        car = carRepository.GetCarById(CarId);
+
+        if (car is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
