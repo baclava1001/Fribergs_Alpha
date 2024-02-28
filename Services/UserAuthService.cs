@@ -10,15 +10,16 @@ namespace Fribergs_Alpha.Services
         private readonly ICustomer _customerRepo;
         private readonly IAdmin _adminRepo;
 
-
-
         public UserAuthService(ICustomer customerRepo, IAdmin adminRepo)
         {
             _customerRepo = customerRepo;
             _adminRepo = adminRepo;
         }
 
-
+        // Primary user authentication function. Takes in user login credentials (email, password) and searches for
+        // matching user and password in customer- and adminrepositories.
+        // If match is made, creates a claims profile/list of claims that is forwarded to Login.razor and tied to
+        // the users authentication cookie.
         public AuthResult UserLogin(LoginCredentials credentials)
         {
             var result = new AuthResult();
