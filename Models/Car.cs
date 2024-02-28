@@ -9,8 +9,7 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Maker")]
         public string Brand { get; set; } = "";
         [DisplayName("Model")]
-        public string CarModel { get; set; } = "";
-        [MinLength(4), MaxLength(4)]        
+        public string CarModel { get; set; } = "";        
         public int Year { get; set; }
         public string Color { get; set; } = "";
         public string Description { get; set; } = "";
