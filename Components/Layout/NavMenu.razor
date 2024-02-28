@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject NavigationManager NavigationManager
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Fribergs_Alpha</a>
     </div>
@@ -26,11 +28,37 @@
             </NavLink>
         </div>
         
+        <AuthorizeView>
+            <NotAuthorized>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="login">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
             </NavLink>
         </div>
+            </NotAuthorized>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <button @onclick="UserLogoutAsync" class="nav-link">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
+                    </button>
+                </div>
+
+            </Authorized>
+
+        </AuthorizeView>
     </nav>
 </div>
 
+@code{
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    public async Task UserLogoutAsync()
+    {
+        Console.WriteLine("Button clicked!");
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -23,14 +23,16 @@ namespace Fribergs_Alpha.Services
         {
             var result = new AuthResult();
             var claims = new List<Claim>();
-            var userIdentity = new ClaimsPrincipal();
 
             var customer = _customerRepo.GetCustomerByEmail(credentials.Email);
             if (customer != null && customer.Password == credentials.Password)
             {
+                claims.Add(new Claim(type: ClaimTypes.Authentication, "Passed"));
                 claims.Add(new Claim(type: ClaimTypes.Role, "Customer"));
+                claims.Add(new Claim(type: ClaimTypes.Name, $"{customer.FirstName} {customer.LastName}"));
                 claims.Add(new Claim(type: ClaimTypes.UserData, customer.CustomerId.ToString()));
 
+                result.AuthSuccess = true;
                 result.RedirectPath = "/customer";
             }
             else if (customer == null)
@@ -38,15 +40,23 @@ namespace Fribergs_Alpha.Services
                 var admin = _adminRepo.GetAdminByEmail(credentials.Email);
                 if (admin != null && admin.Password == credentials.Password)
                 {
+                    claims.Add(new Claim(type: ClaimTypes.Authentication, "Passed"));
                     claims.Add(new Claim(type: ClaimTypes.Role, "Admin"));
+                    claims.Add(new Claim(type: ClaimTypes.Name, $"ADMIN {admin.FirstName} {admin.LastName}"));
                     claims.Add(new Claim(type: ClaimTypes.UserData, admin.AdminId.ToString()));
 
                     result.AuthSuccess = true;
                     result.RedirectPath = "/admin";
                 }
+                else
+                {
+                    result.AuthSuccess = false;
+                    result.ErrorMessage = "Login credentials incorrect";
+                }
             }
             else
             {
+                result.AuthSuccess = false;
                 result.ErrorMessage = "Login credentials incorrect";
             }
 

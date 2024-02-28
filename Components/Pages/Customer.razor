@@ -1,4 +1,6 @@
 ﻿@page "/customer"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize (Policy = "CustomerRoleRequired")]
 
 <h3>Customer</h3>
 

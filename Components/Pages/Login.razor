@@ -11,9 +11,9 @@
 
 <h3>Login</h3>
 
-@if (AuthResult.AuthSuccess)
+@if (!AuthResult.AuthSuccess)
 {
-    <span class="alert alert-danger">@AuthResult.ErrorMessage</span>
+    <span style="color:red">@AuthResult.ErrorMessage</span>
 }
 
 <EditForm method="post" OnSubmit="UserLoginAsync" Model="Credentials" FormName="LoginUser">
@@ -39,26 +39,22 @@
 
     public async Task UserLoginAsync()
     {
-        var authResult = AuthService.UserLogin(Credentials);
+        AuthResult = AuthService.UserLogin(Credentials);
 
-        if (authResult.AuthSuccess)
+        if (AuthResult.AuthSuccess)
         {
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, authResult.IdentityClaims);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, AuthResult.IdentityClaims);
 
-            NavigationManager.NavigateTo(authResult.RedirectPath);
-        }
-        else
-        {
-            // Print out authResult.ErrorMessage.
+            NavigationManager.NavigateTo(AuthResult.RedirectPath);
         }
     }
 
-    public async Task UserLogoutAsync()
-    {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    // public async Task UserLogoutAsync()
+    // {
+    //     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
        
-        //NavigationManager.NavigateTo("/");
-    }
+    //     NavigationManager.NavigateTo("/");
+    // }
 
 
 }
