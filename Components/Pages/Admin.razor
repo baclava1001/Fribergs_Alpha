@@ -1,10 +1,13 @@
 ﻿@page "/admin"
 @using Microsoft.AspNetCore.Authorization
+@using Fribergs_Alpha.Components.Admin
 @attribute [Authorize(Policy = "AdminRoleRequired")]
 
 <h3>Admin</h3>
 
 <span>You are currently in the Admin section</span>
+
+<CreateUser></CreateUser>
 
 @code {
 

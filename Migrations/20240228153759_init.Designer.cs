@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fribergs_Alpha.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240227140944_init")]
+    [Migration("20240228153759_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -139,7 +139,6 @@ namespace Fribergs_Alpha.Migrations
                         .HasColumnType("float");
 
                     b.Property<int>("Year")
-                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.HasKey("CarId");

@@ -1,0 +1,143 @@
+﻿@using Fribergs_Alpha.Data
+@using Fribergs_Alpha.Models
+@inject IAdmin AdminRepo
+@inject ICustomer CustomerRepo
+
+
+
+
+<div>
+    <label>
+        Select user type:
+        <InputSelect @bind-Value="ModelType">
+
+            <option value="">Select user type</option>
+
+            <option checked="@(ModelType == "Admin") value="Admin">Admin</option>
+
+            <option checked="@(ModelType == "Customer") value="Customer">Customer</option>
+
+        </InputSelect>
+    </label>
+</div>
+
+
+
+
+@if (ModelType == "Admin")
+{
+    <EditForm Model="Admin" OnValidSubmit="CreateAdmin" FormName="CreateAdmin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div>
+            <label>
+                First name
+                <InputText @bind-Value="Admin.FirstName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Last name
+                <InputText @bind-Value="Admin.LastName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Adress
+                <InputText @bind-Value="Admin.Adress" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Email
+                <InputText @bind-Value="Admin.Email" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Phone number
+                <InputText @bind-Value="Admin.PhoneNumber" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Password
+                <InputText @bind-Value="Admin.Password" />
+            </label>
+        </div>
+
+    </EditForm>
+
+}
+
+@if (ModelType == "Customer")
+{
+    <EditForm Model="Customer" OnValidSubmit="CreateCustomer" FormName="CreateCustomer">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div>
+            <label>
+                First name
+                <InputText @bind-Value="Admin.FirstName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Last name
+                <InputText @bind-Value="Admin.LastName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Adress
+                <InputText @bind-Value="Admin.Adress" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Email
+                <InputText @bind-Value="Admin.Email" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Phone number
+                <InputText @bind-Value="Admin.Phone" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Password
+                <InputText @bind-Value="Admin.Password" />
+            </label>
+        </div>
+
+    </EditForm>
+
+}
+
+@code {
+
+    [SupplyParameterFromForm]
+    public string ModelType { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    public Admin Admin { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    public Customer Customer { get; set; } = default!;
+
+
+    public void CreateAdmin()
+    {
+
+
+    }
+
+    public void CreateCustomer()
+    {
+
+
+    }
+
+}
