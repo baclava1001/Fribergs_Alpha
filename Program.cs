@@ -38,11 +38,6 @@ namespace Fribergs_Alpha
                     options.LoginPath = "/login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                     options.SlidingExpiration = true;
-                    options.Events.OnRedirectToLogin = context =>
-                        {
-                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            return Task.CompletedTask;
-                        };
                 });
 
             // Authorization policies with role claims.
