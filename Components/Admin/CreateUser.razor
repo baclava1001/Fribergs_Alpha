@@ -9,69 +9,76 @@
 
 @if (Result != null)
 {
-    @Result
+    <span class="text-success">@Result</span>
+
+    <NavLink class="nav-link" href="/admin/createuser">Create new user account</NavLink>
+    <NavLink class="nav-link" href="/admin">Return</NavLink>
 }
 
 
-<h3>Create new user account</h3>
+@if (ShowForm)
+{
+    <h3>Create new user account</h3>
 
-<EditForm Model="User" OnValidSubmit="CreateNewUser" FormName="CreateUser">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div>
-        <label>
-            First name
-            <InputText @bind-Value="User!.FirstName" />
-        </label>
-    </div>
-    <div>
-        <label>
-            Last name
-            <InputText @bind-Value="User!.LastName" />
-        </label>
-    </div>
-    <div>
-        <label>
-            Adress
-            <InputText @bind-Value="User!.Address" />
-        </label>
-    </div>
-    <div>
-        <label>
-            Email
-            <InputText @bind-Value="User!.Email" />
-        </label>
-    </div>
-    <div>
-        <label>
-            Phone number
-            <InputText @bind-Value="User!.PhoneNumber" />
-        </label>
-    </div>
-    <div>
-        <label>
-            Password
-            <InputText @bind-Value="User!.Password" />
-        </label>
-    </div>
-    <div>
-        <label class="text-danger">
-            Grant user administrator rights?
-            <InputCheckbox @bind-Value="User!.AdminRole" />
-        </label>
-    </div>
-    <br/>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
+    <EditForm Model="User" OnValidSubmit="CreateNewUser" FormName="CreateUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div>
+            <label>
+                First name
+                <InputText @bind-Value="User!.FirstName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Last name
+                <InputText @bind-Value="User!.LastName" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Adress
+                <InputText @bind-Value="User!.Address" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Email
+                <InputText @bind-Value="User!.Email" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Phone number
+                <InputText @bind-Value="User!.PhoneNumber" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Password
+                <InputText @bind-Value="User!.Password" />
+            </label>
+        </div>
+        <div>
+            <label class="text-danger">
+                Grant user administrator rights?
+                <InputCheckbox @bind-Value="User!.AdminRole" />
+            </label>
+        </div>
+        <br />
+        <div>
+            <button type="submit">Submit</button>
+        </div>
 
-</EditForm>
-
+    </EditForm>
 }
+
 
 @code {
 
     public string? Result { get; set; }
+
+    public bool ShowForm { get; set; } = true;
 
     [SupplyParameterFromForm]
     public User? User { get; set; } = new User();
@@ -81,6 +88,7 @@
     {
         UserRepo.AddUser(User);
         Result = $"Successfully created customer {User.FirstName} {User.LastName}!";
+        ShowForm = false;
         StateHasChanged();
     }
 }
