@@ -1,115 +1,114 @@
-﻿@using Fribergs_Alpha.Data
+﻿@page "/admin/createuser/{modeltype}"
+@using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Policy = "AdminRoleRequired")]
+
 @inject IAdmin AdminRepo
 @inject ICustomer CustomerRepo
 
 
-
-
-<div>
-    <label>
-        Select user type:
-        <InputSelect @bind-Value="ModelType">
-
-            <option value="">Select user type</option>
-
-            <option checked="@(ModelType == "Admin") value="Admin">Admin</option>
-
-            <option checked="@(ModelType == "Customer") value="Customer">Customer</option>
-
-        </InputSelect>
-    </label>
-</div>
-
-
-
-
-@if (ModelType == "Admin")
+@if (Result != null)
 {
+    @Result
+}
+
+@if (ModelType == "admin")
+{
+    <h3>Create new administrator</h3>
+
     <EditForm Model="Admin" OnValidSubmit="CreateAdmin" FormName="CreateAdmin">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div>
             <label>
                 First name
-                <InputText @bind-Value="Admin.FirstName" />
+                <InputText @bind-Value="Admin!.FirstName" />
             </label>
         </div>
         <div>
             <label>
                 Last name
-                <InputText @bind-Value="Admin.LastName" />
+                <InputText @bind-Value="Admin!.LastName" />
             </label>
         </div>
         <div>
             <label>
                 Adress
-                <InputText @bind-Value="Admin.Adress" />
+                <InputText @bind-Value="Admin!.Address" />
             </label>
         </div>
         <div>
             <label>
                 Email
-                <InputText @bind-Value="Admin.Email" />
+                <InputText @bind-Value="Admin!.Email" />
             </label>
         </div>
         <div>
             <label>
                 Phone number
-                <InputText @bind-Value="Admin.PhoneNumber" />
+                <InputText @bind-Value="Admin!.PhoneNumber" />
             </label>
         </div>
         <div>
             <label>
                 Password
-                <InputText @bind-Value="Admin.Password" />
+                <InputText @bind-Value="Admin!.Password" />
             </label>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
         </div>
 
     </EditForm>
 
 }
 
-@if (ModelType == "Customer")
+@if (ModelType == "customer")
 {
+    <h3>Create new customer</h3>
+
     <EditForm Model="Customer" OnValidSubmit="CreateCustomer" FormName="CreateCustomer">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div>
             <label>
                 First name
-                <InputText @bind-Value="Admin.FirstName" />
+                <InputText @bind-Value="Customer!.FirstName" />
             </label>
         </div>
         <div>
             <label>
                 Last name
-                <InputText @bind-Value="Admin.LastName" />
+                <InputText @bind-Value="Customer!.LastName" />
             </label>
         </div>
         <div>
             <label>
                 Adress
-                <InputText @bind-Value="Admin.Adress" />
+                <InputText @bind-Value="Customer!.Address" />
             </label>
         </div>
         <div>
             <label>
                 Email
-                <InputText @bind-Value="Admin.Email" />
+                <InputText @bind-Value="Customer!.Email" />
             </label>
         </div>
         <div>
             <label>
                 Phone number
-                <InputText @bind-Value="Admin.Phone" />
+                <InputText @bind-Value="Customer!.PhoneNumber" />
             </label>
         </div>
         <div>
             <label>
                 Password
-                <InputText @bind-Value="Admin.Password" />
+                <InputText @bind-Value="Customer!.Password" />
             </label>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
         </div>
 
     </EditForm>
@@ -118,14 +117,16 @@
 
 @code {
 
-    [SupplyParameterFromForm]
-    public string ModelType { get; set; } = default!;
+    [Parameter]
+    public string? ModelType { get; set; }
 
-    [SupplyParameterFromForm]
-    public Admin Admin { get; set; } = default!;
+    public string? Result { get; set; }
 
-    [SupplyParameterFromForm]
-    public Customer Customer { get; set; } = default!;
+    [SupplyParameterFromForm(FormName = "CreateAdmin")]
+    public Admin? Admin { get; set; } = new Admin();
+
+    [SupplyParameterFromForm(FormName = "CreateCustomer")]
+    public Customer? Customer { get; set; } = new Customer();
 
 
     public void CreateAdmin()
@@ -136,8 +137,10 @@
 
     public void CreateCustomer()
     {
-
-
+        CustomerRepo.AddCustomer(Customer);
+        Result = $"Successfully created customer {Customer.FirstName} {Customer.LastName}!";
+        ModelType = null;
+        StateHasChanged();
     }
 
 }
