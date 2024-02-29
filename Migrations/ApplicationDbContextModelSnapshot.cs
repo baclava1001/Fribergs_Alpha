@@ -136,7 +136,6 @@ namespace Fribergs_Alpha.Migrations
                         .HasColumnType("float");
 
                     b.Property<int>("Year")
-                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.HasKey("CarId");
