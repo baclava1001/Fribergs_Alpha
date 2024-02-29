@@ -16,15 +16,13 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Total Sum")]
         public double? TotalSum { get; set; }
         [DisplayName("Customer"), Required]
-        public Customer? Customer { get; set; }
-        [DisplayName("Employee")]
-        public string? AdministratorName { get; set; }
+        public User? User { get; set; }
+        
 
         public Booking()
         {
             PickUpDate = DateOnly.FromDateTime(DateTime.Now);
             ReturnDate = DateOnly.FromDateTime(DateTime.Now);
-            AdministratorName = null;
         }
     }
 }
