@@ -1,8 +1,10 @@
 ﻿@page "/cars/create"
 @inject ICar carRepository
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
 @inject NavigationManager NavigationManager
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Create</PageTitle>
 
@@ -15,6 +17,16 @@
         <EditForm method="post" Model="@Car" OnValidSubmit="AddCar" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="category" class="form-label">Car category:</label>
+                <InputSelect id="category" @bind-Value="Car.Category.CarCategoryId" class="form-control">
+                @foreach (var category in carCategoryRepository.GetAllCarCategories())
+                {
+                        <option value="@category.CarCategoryId">@category.Category</option>
+                }
+                </InputSelect>
+                <ValidationMessage For="() => Car.Category.CarCategoryId" class="text-danger" />
+            </div>
             <div class="mb-3">
                 <label for="brand" class="form-label">Brand:</label> 
                 <InputText id="brand" @bind-Value="Car.Brand" class="form-control" /> 
