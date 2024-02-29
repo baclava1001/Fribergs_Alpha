@@ -24,7 +24,7 @@
             <dt class="col-sm-10">@car.Category.Category</dt>
             <dt class="col-sm-2">Brand</dt>
             <dd class="col-sm-10">@car.Brand</dd>
-            <dt class="col-sm-2">CarModel</dt>
+            <dt class="col-sm-2">Model</dt>
             <dd class="col-sm-10">@car.CarModel</dd>
             <dt class="col-sm-2">Year</dt>
             <dd class="col-sm-10">@car.Year</dd>
@@ -32,10 +32,10 @@
             <dd class="col-sm-10">@car.Color</dd>
             <dt class="col-sm-2">Description</dt>
             <dd class="col-sm-10">@car.Description</dd>
-            <dt class="col-sm-2">PricePerDay</dt>
+            <dt class="col-sm-2">Price Per Day</dt>
             <dd class="col-sm-10">@car.PricePerDay</dd>
-            <dt class="col-sm-2">CarPicUrl</dt>
-            <dd class="col-sm-10">@car.CarPicUrl</dd>
+            <dt class="col-sm-2">Picture</dt>
+            <dd class="col-sm-10"><img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" /></dd>
         </dl>
         <div>
             <a href="@($"/cars/edit?carid={car.CarId}")">Edit</a> |
