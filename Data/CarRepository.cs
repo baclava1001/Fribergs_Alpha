@@ -33,7 +33,9 @@ namespace Fribergs_Alpha.Data
 
         public void UpdateCar(Car car)
         {
+            _applicationDbContext.ChangeTracker.Clear();
             _applicationDbContext.Update(car);
+            _applicationDbContext.Entry(car.Category!).State = EntityState.Unchanged;
             _applicationDbContext.SaveChanges();
         }
 
