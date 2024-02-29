@@ -27,6 +27,7 @@ namespace Fribergs_Alpha
             builder.Services.AddTransient<IAdmin, AdminRepository>();
             builder.Services.AddTransient<ICar, CarRepository>();
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
 
             // Cookie-based authentication.
             builder.Services.AddAuthentication(options =>

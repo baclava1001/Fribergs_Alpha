@@ -14,19 +14,19 @@ namespace Fribergs_Alpha.Data
 
         public IEnumerable<Booking> GetAllBookings()
         {
-            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.Customer).OrderBy(b => b.Customer.LastName).ThenBy(b => b.Customer.FirstName).ToList();
+            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.User).OrderBy(b => b.BookingId).ToList();
         }
 
         public Booking GetBookingById(int? bookingId)
         {
-            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.Customer).FirstOrDefault(b => b.BookingId == bookingId);
+            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.User).FirstOrDefault(b => b.BookingId == bookingId);
         }
 
         public void AddBooking(Booking booking)
         {
             // Undanta BookedCar och Customer från EF Cores operationer
             _applicationDbContext.Entry(booking.Car!).State = EntityState.Unchanged;
-            _applicationDbContext.Entry(booking.Customer!).State = EntityState.Unchanged;
+            _applicationDbContext.Entry(booking.User!).State = EntityState.Unchanged;
             
             _applicationDbContext.Add(booking);
             _applicationDbContext.SaveChanges();
