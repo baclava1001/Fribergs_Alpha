@@ -1,9 +1,9 @@
 ﻿@page "/carcategories/create"
-@* @inject Fribergs_Alpha.Data.ApplicationDbContext DB *@
 @inject ICarCategory CarCategoryRepository
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Create</PageTitle>
 

@@ -25,7 +25,9 @@ namespace Fribergs_Alpha.Data
 
         public void AddCar(Car car)
         {
+            _applicationDbContext.ChangeTracker.Clear();
             _applicationDbContext.Add(car);
+            _applicationDbContext.Entry(car.Category!).State = EntityState.Unchanged;
             _applicationDbContext.SaveChanges();
         }
 
