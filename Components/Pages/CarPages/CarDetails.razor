@@ -1,5 +1,6 @@
 ﻿@page "/cars/details"
 @inject ICar carRepository
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
@@ -19,6 +20,8 @@
     }
     else {
         <dl class="row">
+            <dt class="col-sm-2">CarCategory</dt>
+            <dt class="col-sm-10">@car.Category.Category</dt>
             <dt class="col-sm-2">Brand</dt>
             <dd class="col-sm-10">@car.Brand</dd>
             <dt class="col-sm-2">Model</dt>
