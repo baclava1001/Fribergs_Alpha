@@ -19,7 +19,7 @@ namespace Fribergs_Alpha.Data
 
         public IEnumerable<CarCategory> GetAllCarCategories()
         {
-            return _applicationDbContext.CarCategories.ToList();
+            return _applicationDbContext.CarCategories;
         }
 
         public void AddCarCategory(CarCategory carCategory)

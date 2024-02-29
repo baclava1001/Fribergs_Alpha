@@ -15,12 +15,12 @@ namespace Fribergs_Alpha.Data
 
         public Car GetCarById(int? id)
         {
-            return _applicationDbContext.Cars.FirstOrDefault(c => c.CarId == id);
+            return _applicationDbContext.Cars.Include(c => c.Category).FirstOrDefault(c => c.CarId == id);
         }
 
         public IEnumerable<Car> GetAllCars()
         {
-            return _applicationDbContext.Cars.OrderBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).ToList();
+            return _applicationDbContext.Cars.Include(c => c.Category).OrderBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).ToList();
         }
 
         public void AddCar(Car car)
@@ -33,7 +33,9 @@ namespace Fribergs_Alpha.Data
 
         public void UpdateCar(Car car)
         {
+            _applicationDbContext.ChangeTracker.Clear();
             _applicationDbContext.Update(car);
+            _applicationDbContext.Entry(car.Category!).State = EntityState.Unchanged;
             _applicationDbContext.SaveChanges();
         }
 

@@ -2,8 +2,10 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Fribergs_Alpha.Data
 @inject ICar carRepository
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
+
 
 <PageTitle>Index</PageTitle>
 
@@ -13,16 +15,20 @@
     <a href="cars/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="GetCarList()">
-    <PropertyColumn Property="car => car.Brand" />
-    <PropertyColumn Property="car => car.CarModel" />
-    <PropertyColumn Property="car => car.Year" />
-    <PropertyColumn Property="car => car.Color" />
-    <PropertyColumn Property="car => car.Description" />
-    <PropertyColumn Property="car => car.PricePerDay" />
-    <PropertyColumn Property="car => car.CarPicUrl" />
+<QuickGrid Class="table" Items="Cars">
+    <PropertyColumn Property="car => car.Category.Category" Title="Category" />
+    <PropertyColumn Property="car => car.Brand" Title="Brand" />
+    <PropertyColumn Property="car => car.CarModel" Title="Model" />
+    <PropertyColumn Property="car => car.Year" Title="Year" />
+    <PropertyColumn Property="car => car.Color" Title="Color" />
+    <PropertyColumn Property="car => car.Description" Title="Description" />
+    <PropertyColumn Property="car => car.PricePerDay" Title="SEK/Day" />
+    
+    <TemplateColumn Context="car" Title="Picture">
+        <img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-thumbnail" />
+    </TemplateColumn>
 
-    <TemplateColumn Context="car">
+    <TemplateColumn Context="car" Title="Handle">
         <a href="@($"cars/edit?carid={car.CarId}")">Edit</a> |
         <a href="@($"cars/details?carid={car.CarId}")">Details</a> |
         <a href="@($"cars/delete?carid={car.CarId}")">Delete</a>
@@ -32,8 +38,8 @@
 @code{
     IQueryable<Car>? Cars = null;
 
-    protected IQueryable<Car>? GetCarList()
+    protected override void OnInitialized()
     {
-        return Cars = carRepository.GetAllCars().AsQueryable();
+        Cars = carRepository.GetAllCars().AsQueryable();
     }
 }

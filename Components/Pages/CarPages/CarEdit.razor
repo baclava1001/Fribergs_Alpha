@@ -1,15 +1,17 @@
 ﻿@page "/Cars/edit"
 @inject ICar carRepository
+@inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Edit</PageTitle>
 
 <h1>Edit</h1>
 
-<h4>Car</h4>
+<h4>@Car.Brand @Car.CarModel @Car.Year</h4>
 <hr />
 @if (Car is null)
 {
@@ -23,6 +25,17 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <input type="hidden" name="Car.CarId" value="@Car.CarId" />
+                <div class="mb-3">
+                    <label for="carcategory" class="form-label">CarCategory:</label>
+                    <InputSelect id="category" @bind-Value="Car.Category.CarCategoryId" class="form-control">
+                        @foreach (var category in carCategoryRepository.GetAllCarCategories())
+                        {
+                            <option value="@category.CarCategoryId">@category.Category</option>
+                        }
+                        <option value="@Car.Category.CarCategoryId"></option>
+                    </InputSelect>
+                    <ValidationMessage For="() => Car.Category.CarCategoryId" class="text-danger" />
+                </div>
                 <div class="mb-3">
                     <label for="brand" class="form-label">Brand:</label>
                     <InputText id="brand" @bind-Value="Car.Brand" class="form-control" />
