@@ -21,7 +21,9 @@
     <PropertyColumn Property="car => car.Color" />
     <PropertyColumn Property="car => car.Description" />
     <PropertyColumn Property="car => car.PricePerDay" />
-    <PropertyColumn Property="car => car.CarPicUrl" />
+    <TemplateColumn Context="car">
+        <img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-thumbnail" />
+    </TemplateColumn>
 
     <TemplateColumn Context="car">
         <a href="@($"cars/edit?carid={car.CarId}")">Edit</a> |
