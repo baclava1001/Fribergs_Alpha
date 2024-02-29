@@ -13,28 +13,41 @@
 
 <h3>Login</h3>
 
-<br/>
+<hr />
 
 @if (!AuthResult.AuthSuccess)
 {
     <span class="text-danger">@AuthResult.ErrorMessage</span>
 }
 
-<EditForm method="post" Model="Credentials" OnValidSubmit="UserLoginAsync" FormName="LoginUser" Enhance>
-    <DataAnnotationsValidator />
-        <div class="mb-3">
-            <label for="Email" class="form-label">Email:</label>
-            <InputText @bind-Value="Credentials.Email" Placeholder="Email" class="form-control" />
-            <ValidationMessage For="() => Credentials.Email" class="text-danger" />
-        </div>
 
-        <div class="mb-3">
-            <label for="Password" class="form-label">Password:</label>
-            <InputText @bind-Value="Credentials.Password" Placeholder="Password" type="password" class="form-control" />
-            <ValidationMessage For="() => Credentials.Password" />
-        </div>
-        <button type="submit">Login</button>
-</EditForm>
+<div class="row">
+    <div class="col-md-4">
+
+        <EditForm method="post" Model="Credentials" OnValidSubmit="UserLoginAsync" FormName="LoginUser" Enhance>
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label for="Email" class="form-label">
+                    Email
+                </label>
+                <InputText @bind-Value="Credentials.Email" Placeholder="Email" class="form-control" />
+                <ValidationMessage For="() => Credentials.Email" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">
+                    Password
+                </label>
+                <InputText @bind-Value="Credentials.Password" Placeholder="Password" type="password" class="form-control" />
+                <ValidationMessage For="() => Credentials.Password" />
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+
+        </EditForm>
+    </div>
+</div>
 
 
 
@@ -70,5 +83,5 @@
     //     NavigationManager.NavigateTo("/");
     // }
 
-   
+
 }
