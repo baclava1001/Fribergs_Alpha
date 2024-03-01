@@ -31,15 +31,17 @@ namespace Fribergs_Alpha
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
 
-            var a1 = new Admin() { FirstName = "Hacker", LastName = "Man", Address = "CyberSpace", Email = "Hackerman@gmail.com", Password = "ezpz123", PhoneNumber = "234" };
+            var u3 = new User() { FirstName = "Hacker", LastName = "Man", Address = "CyberSpace", Email = "Hackerman@gmail.com", Password = "ezpz123", PhoneNumber = "234", AdminRole = true };
             var cc1 = new CarCategory() { Category = "Snabb bil" };
             var cc2 = new CarCategory() { Category = "Långsam bil" };
-            var cu1 = new Customer() { FirstName = "Customer", LastName = "Customer", Address = "Customercity", Email = "Customer@customer.com", Password = "customer123", PhoneNumber = "123" };
+            var u2 = new User() { FirstName = "Customer", LastName = "Customer", Address = "Customercity", Email = "Customer@customer.com", Password = "customer123", PhoneNumber = "123", AdminRole = false };
+            var u1 = new User() { FirstName="User", LastName="User", Address="Usertown", Email="User@user.com", Password="user123", PhoneNumber="123", AdminRole = false };
             var dbCtx = new ApplicationDbContext();
-            dbCtx.Add(a1);
+            dbCtx.Add(u2);
             dbCtx.Add(cc1);
             dbCtx.Add(cc2);
-            dbCtx.Add(cu1);
+            dbCtx.Add(u3);
+            dbCtx.Add(u1);
             dbCtx.SaveChanges();
 
             // Cookie-based authentication.
