@@ -1,0 +1,24 @@
+﻿@page "/bookings"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@using Fribergs_Alpha.Models
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="bookings/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.Bookings">
+    <PropertyColumn Property="booking => booking.PickUpDate" />
+    <PropertyColumn Property="booking => booking.ReturnDate" />
+    <PropertyColumn Property="booking => booking.TotalSum" />
+
+    <TemplateColumn Context="booking">
+        <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+        <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

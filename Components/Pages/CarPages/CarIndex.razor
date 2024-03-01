@@ -1,5 +1,6 @@
 ﻿@page "/cars"
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.EntityFrameworkCore
 @using Fribergs_Alpha.Data
 @inject ICar carRepository
 @inject ICarCategory carCategoryRepository
@@ -36,10 +37,10 @@
 </QuickGrid>
 
 @code{
-    IQueryable<Car>? Cars = null;
+    IQueryable<Car>? Cars;
 
     protected override void OnInitialized()
     {
-        Cars = carRepository.GetAllCars().AsQueryable();
+        Cars = carRepository.GetAllCars();
     }
 }

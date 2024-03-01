@@ -7,6 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Pages\BookingPages\**" />
+    <Content Remove="Components\Pages\BookingPages\**" />
+    <EmbeddedResource Remove="Components\Pages\BookingPages\**" />
+    <None Remove="Components\Pages\BookingPages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\AdminRepository.cs" />
+    <Compile Remove="Data\CustomerRepository.cs" />
+    <Compile Remove="Data\IAdmin.cs" />
+    <Compile Remove="Data\ICustomer.cs" />
+    <Compile Remove="Models\Admin.cs" />
+    <Compile Remove="Models\Customer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2">

@@ -5,6 +5,7 @@ using Fribergs_Alpha.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 
@@ -25,8 +26,8 @@ namespace Fribergs_Alpha
 
             builder.Services.AddQuickGridEntityFrameworkAdapter();
             builder.Services.AddTransient<IBooking, BookingRepository>();
-            builder.Services.AddTransient<ICustomer, CustomerRepository>();
-            builder.Services.AddTransient<IAdmin, AdminRepository>();
+            //builder.Services.AddTransient<ICustomer, CustomerRepository>();
+            //builder.Services.AddTransient<IAdmin, AdminRepository>();
             builder.Services.AddTransient<ICar, CarRepository>();
             builder.Services.AddTransient<ICarCategory, CarCategoryRepository>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();

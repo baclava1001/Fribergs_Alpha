@@ -1,4 +1,4 @@
-﻿@page "/admin/createuser"
+﻿@page "/userpages/createuser"
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @using Microsoft.AspNetCore.Authorization
@@ -9,9 +9,9 @@
 
 @if (Result != null)
 {
-    <span class="text-success">@Result</span>
+    <span class="alert alert-warning">@Result</span>
 
-    <NavLink class="nav-link" href="/admin/createuser">Create new user account</NavLink>
+    <NavLink class="nav-link" href="/userpages/createuser">Create new user account</NavLink>
     <NavLink class="nav-link" href="/admin">Return</NavLink>
 }
 
@@ -114,8 +114,26 @@
 
     public void CreateNewUser()
     {
-        UserRepo.AddUser(User);
-        Result = $"Successfully created customer {User.FirstName} {User.LastName}!";
+        var user = UserRepo.GetUserByEmail(User.Email);
+
+        if (user == null)
+        {
+            UserRepo.AddUser(User);
+            var newUser = UserRepo.GetUserByEmail(User.Email);
+            if (newUser != null)
+            {
+                Result = $"Successfully created user account! ID: {newUser.UserId} Name: {newUser.FirstName} {newUser.LastName}";
+            }
+            else
+            {
+                Result = "There was an issue in creating the user account!";
+            }
+        }
+        else
+        {
+            Result = "There is already an existing account with this email!";
+        }
+
         ShowForm = false;
         StateHasChanged();
     }

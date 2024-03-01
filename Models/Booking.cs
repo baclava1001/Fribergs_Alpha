@@ -10,9 +10,10 @@ namespace Fribergs_Alpha.Models
         [Required]
         public Car? Car { get; set; }
         [DisplayName("Pick-up Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
-        public DateOnly PickUpDate { get; set; }
+        // TODO: Changed to DateTime for better compatibility - unsure if it works
+        public DateTime PickUpDate { get; set; }
         [DisplayName("Return Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
-        public DateOnly ReturnDate { get; set; }
+        public DateTime ReturnDate { get; set; }
         [DisplayName("Total Sum")]
         public double? TotalSum { get; set; }
         [DisplayName("Customer"), Required]
@@ -21,8 +22,10 @@ namespace Fribergs_Alpha.Models
 
         public Booking()
         {
-            PickUpDate = DateOnly.FromDateTime(DateTime.Now);
-            ReturnDate = DateOnly.FromDateTime(DateTime.Now);
+            PickUpDate = DateTime.Now;
+            ReturnDate = DateTime.Now;
+            //PickUpDate = DateOnly.FromDateTime(DateTime.Now);
+            //ReturnDate = DateOnly.FromDateTime(DateTime.Now);
         }
     }
 }

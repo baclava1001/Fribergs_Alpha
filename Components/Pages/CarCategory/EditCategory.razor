@@ -84,7 +84,7 @@ else
         NavigationManager.NavigateTo("/carcategories");
     }
 
-    bool CarCategoryExists(int carcategoryId)
+    public bool CarCategoryExists(int carcategoryId)
     {
         return carCategoryRepository.GetAllCarCategories().Any(e => e.CarCategoryId == carcategoryId);
     }

@@ -16,8 +16,14 @@ namespace Fribergs_Alpha.Models
         [DisplayName("Price per day"), Required]
         public double PricePerDay { get; set; }
         [DisplayName("Category"), Required]
-        public CarCategory? Category { get; set; } = new CarCategory();
+        public CarCategory? Category { get; set; }
         [DisplayName("Picture")]
         public string CarPicUrl { get; set; } = "";
+
+        // Constructor to initialize an instance of Category property
+        public Car()
+        {
+            Category = new CarCategory();
+        }
     }
 }

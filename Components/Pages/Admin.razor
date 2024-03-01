@@ -1,6 +1,6 @@
 ﻿@page "/admin"
 @using Microsoft.AspNetCore.Authorization
-@using Fribergs_Alpha.Components.Admin
+@using Fribergs_Alpha.Components.Pages.UserPages
 @attribute [Authorize(Policy = "AdminRoleRequired")]
 
 
@@ -20,7 +20,13 @@
             </div>
 
             <div class="row">
-            <NavLink class="nav-link" href="/admin/createuser">Create User Account</NavLink>
+            <NavLink class="nav-link" href="/userpages/createuser">Create user account</NavLink>
+            </div>
+            <div class="row">
+                <NavLink class="nav-link" href="/userpages/users/Customer">List all customer accounts</NavLink>
+            </div>
+            <div class="row">
+                <NavLink class="nav-link" href="/userpages/users/Admin">List all administrator accounts</NavLink>
             </div>
         </div>
 

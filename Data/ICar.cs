@@ -4,7 +4,7 @@ namespace Fribergs_Alpha.Data
 {
     public interface ICar
     {
-        IEnumerable<Car> GetAllCars();
+        IQueryable<Car> GetAllCars();
         Car GetCarById(int? id);
         void AddCar(Car car);
         void UpdateCar(Car car);

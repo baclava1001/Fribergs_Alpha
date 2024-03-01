@@ -20,10 +20,13 @@
             <div class="mb-3">
                 <label for="category" class="form-label">Car category:</label>
                 <InputSelect id="category" @bind-Value="Car.Category.CarCategoryId" class="form-control">
-                    <option value="0" hidden>--- Choose category ---</option>
+                    <option value="0" hidden>--Choose category--</option>
                     @foreach (var category in carCategoryRepository.GetAllCarCategories())
                     {
-                        <option value="@category.CarCategoryId">@category.Category</option>
+                        if (category != null)
+                        {
+                            <option value="@category.CarCategoryId">@category.Category</option>
+                        }
                     }
                 </InputSelect>
                 <ValidationMessage For="() => Car.Category.CarCategoryId" class="text-danger" />
