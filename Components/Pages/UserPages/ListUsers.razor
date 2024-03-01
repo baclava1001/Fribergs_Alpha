@@ -1,12 +1,14 @@
-﻿@page "/userpages/users"
+﻿@page "/userpages/users/{role}"
 @using Fribergs_Alpha.Models
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Fribergs_Alpha.Data
 @inject IUserRepository UserRepo
+@attribute [Authorize(Policy = "AdminRoleRequired")]
 
 
 
-<h3>Customer accounts</h3>
+<h3>@Role accounts</h3>
 
 <p>
     <a href="userpages/createuser">Create new account</a>
@@ -30,10 +32,20 @@
 
 
 @code {
+    [Parameter]
+    public string? Role { get; set; }
+
     IQueryable<User>? Users = null;
 
     protected override void OnInitialized()
     {
-        Users = UserRepo.GetAllCustomers().AsQueryable();
+        if (Role == "Customer")
+        {
+            Users = UserRepo.GetAllCustomers().AsQueryable();
+        }
+        else if (Role == "Admin")
+        {
+            Users = UserRepo.GetAllAdmins().AsQueryable();
+        }
     }
 }
