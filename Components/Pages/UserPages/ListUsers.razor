@@ -1,0 +1,39 @@
+﻿@page "/userpages/users"
+@using Fribergs_Alpha.Models
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Fribergs_Alpha.Data
+@inject IUserRepository UserRepo
+
+
+
+<h3>List customer accounts</h3>
+
+<p>
+    <a href="userpages/createuser">Create new account</a>
+</p>
+
+<QuickGrid Class="table" Items="Users">
+    <PropertyColumn Property="user => user.UserId" Title="ID" />
+    <PropertyColumn Property="user => user.FirstName" Title="First name" />
+    <PropertyColumn Property="user => user.LastName" Title="Last name" />
+    <PropertyColumn Property="user => user.Email" Title="Email" />
+    <PropertyColumn Property="user => user.Address" Title="Adress" />
+    <PropertyColumn Property="user => user.PhoneNumber" Title="Phone number" />
+
+
+    <TemplateColumn Context="user" Title="Handle">
+        <a href="@($"users/edit?userid={user.UserId}")">Edit</a> |
+        <a href="@($"users/details?userid={user.UserId}")">Details</a> |
+        <a href="@($"users/delete?userid={user.UserId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+
+@code {
+    IQueryable<User>? Users = null;
+
+    protected override void OnInitialized()
+    {
+        Users = UserRepo.GetAllCustomers().AsQueryable();
+    }
+}
