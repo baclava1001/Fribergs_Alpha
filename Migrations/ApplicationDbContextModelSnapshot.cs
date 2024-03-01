@@ -22,45 +22,6 @@ namespace Fribergs_Alpha.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Fribergs_Alpha.Models.Admin", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AdminId");
-
-                    b.ToTable("Admins");
-                });
-
             modelBuilder.Entity("Fribergs_Alpha.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -69,20 +30,14 @@ namespace Fribergs_Alpha.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CarId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("PickUpDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("PickUpDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("ReturnDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<double?>("TotalSum")
                         .HasColumnType("float");
@@ -92,11 +47,7 @@ namespace Fribergs_Alpha.Migrations
 
                     b.HasKey("BookingId");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("CarId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("UserId");
 
@@ -164,45 +115,6 @@ namespace Fribergs_Alpha.Migrations
                     b.ToTable("CarCategories");
                 });
 
-            modelBuilder.Entity("Fribergs_Alpha.Models.Customer", b =>
-                {
-                    b.Property<int>("CustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CustomerId");
-
-                    b.ToTable("Customers");
-                });
-
             modelBuilder.Entity("Fribergs_Alpha.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -247,19 +159,11 @@ namespace Fribergs_Alpha.Migrations
 
             modelBuilder.Entity("Fribergs_Alpha.Models.Booking", b =>
                 {
-                    b.HasOne("Fribergs_Alpha.Models.Admin", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("Fribergs_Alpha.Models.Car", "Car")
                         .WithMany()
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Fribergs_Alpha.Models.Customer", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("CustomerId");
 
                     b.HasOne("Fribergs_Alpha.Models.User", "User")
                         .WithMany("Bookings")
@@ -281,16 +185,6 @@ namespace Fribergs_Alpha.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Fribergs_Alpha.Models.Admin", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Fribergs_Alpha.Models.Customer", b =>
-                {
-                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Fribergs_Alpha.Models.User", b =>

@@ -1,5 +1,5 @@
 ﻿@page "/bookings/details"
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
@@ -39,7 +39,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        booking = await DB.Bookings.FirstOrDefaultAsync(m => m.BookingId == BookingId);
+        booking = bookingRepository.GetBookingById(BookingId);
 
         if (booking is null)
         {
