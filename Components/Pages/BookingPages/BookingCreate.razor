@@ -17,18 +17,18 @@
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
-                <InputText id="pickupdate" @bind-Value="Booking.PickUpDate.ToString()" class="form-control" /> 
-                <ValidationMessage For="() => Booking.PickUpDate.ToString()" class="text-danger" />
+                <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" /> 
+                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
             </div>        
             <div class="mb-3">
                 <label for="returndate" class="form-label">ReturnDate:</label> 
-                <InputText id="returndate" @bind-Value="Booking.ReturnDate.ToString()" class="form-control" />
-                <ValidationMessage For="() => Booking.ReturnDate.ToString()" class="text-danger" />
+                <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
+                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
             </div>        
             <div class="mb-3">
                 <label for="totalsum" class="form-label">TotalSum:</label> 
-                <InputNumber id="totalsum" @bind-Value="Booking.TotalSum.ToString()" class="form-control" />
-                <ValidationMessage For="() => Booking.TotalSum.ToString()" class="text-danger" />
+                <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
+                <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>

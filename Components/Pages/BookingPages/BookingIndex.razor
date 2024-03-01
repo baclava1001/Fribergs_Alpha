@@ -1,6 +1,6 @@
 ﻿@page "/bookings"
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inject Fribergs_Alpha.Data.ApplicationDbContext DB
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
 
 <PageTitle>Index</PageTitle>
@@ -11,7 +11,7 @@
     <a href="bookings/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="DB.Bookings">
+<QuickGrid Class="table" Items="bookingRepository.GetAllBookings().AsQueryable()">
     <PropertyColumn Property="booking => booking.PickUpDate" />
     <PropertyColumn Property="booking => booking.ReturnDate" />
     <PropertyColumn Property="booking => booking.TotalSum" />
