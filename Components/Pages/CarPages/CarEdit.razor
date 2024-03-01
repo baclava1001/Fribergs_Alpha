@@ -30,9 +30,15 @@ else
                     <InputSelect id="category" @bind-Value="Car.Category.CarCategoryId" class="form-control">
                         @foreach (var category in carCategoryRepository.GetAllCarCategories())
                         {
-                            <option value="@category.CarCategoryId">@category.Category</option>
+                            if (category != null)
+                            {
+                                <option value="@category.CarCategoryId">@category.Category</option>
+                                if (category.CarCategoryId == Car.Category.CarCategoryId)
+                                {
+                                    <option value="@category.CarCategoryId" selected="selected">@category.Category</option>
+                                }
+                            }
                         }
-                        <option value="@Car.Category.CarCategoryId"></option>
                     </InputSelect>
                     <ValidationMessage For="() => Car.Category.CarCategoryId" class="text-danger" />
                 </div>
@@ -42,7 +48,7 @@ else
                     <ValidationMessage For="() => Car.Brand" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="carmodel" class="form-label">CarModel:</label>
+                    <label for="carmodel" class="form-label">Model:</label>
                     <InputText id="carmodel" @bind-Value="Car.CarModel" class="form-control" />
                     <ValidationMessage For="() => Car.CarModel" class="text-danger" />
                 </div>
@@ -62,12 +68,12 @@ else
                     <ValidationMessage For="() => Car.Description" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="priceperday" class="form-label">PricePerDay:</label>
+                    <label for="priceperday" class="form-label">SEK/Day:</label>
                     <InputNumber id="priceperday" @bind-Value="Car.PricePerDay" class="form-control" />
                     <ValidationMessage For="() => Car.PricePerDay" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="carpicurl" class="form-label">CarPicUrl:</label>
+                    <label for="carpicurl" class="form-label">Picture source:</label>
                     <InputText id="carpicurl" @bind-Value="Car.CarPicUrl" class="form-control" />
                     <ValidationMessage For="() => Car.CarPicUrl" class="text-danger" />
                 </div>

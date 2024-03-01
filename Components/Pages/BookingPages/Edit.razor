@@ -1,0 +1,97 @@
+﻿@page "/Bookings/edit"
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@using Fribergs_Alpha.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Booking</h4>
+<hr />
+@if (Booking is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Booking" OnValidSubmit="UpdateBooking" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Booking.BookingId" value="@Booking.BookingId" />
+                <div class="mb-3">
+                    <label for="pickupdate" class="form-label">PickUpDate:</label>
+                    <InputText id="pickupdate" @bind-Value="Booking.PickUpDate.ToString()" class="form-control" />
+                    <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="returndate" class="form-label">ReturnDate:</label>
+                    <InputText id="returndate" @bind-Value="Booking.ReturnDate.ToString()" class="form-control" />
+                    <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="totalsum" class="form-label">TotalSum:</label>
+                    <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
+                    <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/bookings">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int BookingId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Booking? Booking { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Booking ??= await bookingRepository.GetBookingById(BookingId);
+
+        if (Booking is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateBooking()
+    {
+        // DB.Attach(Booking!).State = EntityState.Modified;
+
+        try
+        {
+            /* await DB.SaveChangesAsync(); */
+            bookingRepository.UpdateBooking(Booking);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BookingExists(Booking!.BookingId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/bookings");
+    }
+
+    bool BookingExists(int bookingid)
+    {
+        return bookingRepository.GetAllBookings().Any(e => e.BookingId == bookingid);
+    }
+}

@@ -1,0 +1,53 @@
+﻿@page "/bookings/create"
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@using Fribergs_Alpha.Models
+@using Fribergs_Alpha.Data
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Booking</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="pickupdate" class="form-label">PickUpDate:</label> 
+                <InputText id="pickupdate" @bind-Value="Booking.PickUpDate.ToString()" class="form-control" /> 
+                <ValidationMessage For="() => Booking.PickUpDate.ToString()" class="text-danger" />
+            </div>        
+            <div class="mb-3">
+                <label for="returndate" class="form-label">ReturnDate:</label> 
+                <InputText id="returndate" @bind-Value="Booking.ReturnDate.ToString()" class="form-control" />
+                <ValidationMessage For="() => Booking.ReturnDate.ToString()" class="text-danger" />
+            </div>        
+            <div class="mb-3">
+                <label for="totalsum" class="form-label">TotalSum:</label> 
+                <InputNumber id="totalsum" @bind-Value="Booking.TotalSum.ToString()" class="form-control" />
+                <ValidationMessage For="() => Booking.TotalSum.ToString()" class="text-danger" />
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/bookings">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Booking Booking { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public void AddBooking()
+    {
+        bookingRepository.AddBooking(Booking);
+        NavigationManager.NavigateTo("/bookings");
+    }
+}

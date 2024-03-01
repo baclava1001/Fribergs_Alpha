@@ -18,9 +18,10 @@ namespace Fribergs_Alpha.Data
             return _applicationDbContext.Cars.Include(c => c.Category).FirstOrDefault(c => c.CarId == id);
         }
 
-        public IEnumerable<Car> GetAllCars()
+        // TODO: Change this back to IEnumerable or keep IQueryable?
+        public IQueryable<Car> GetAllCars()
         {
-            return _applicationDbContext.Cars.Include(c => c.Category).OrderBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).ToList();
+            return _applicationDbContext.Cars.Include(c => c.Category).OrderBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).AsQueryable();
         }
 
         public void AddCar(Car car)
