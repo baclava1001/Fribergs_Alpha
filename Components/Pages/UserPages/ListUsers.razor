@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Fribergs_Alpha.Data
+@rendermode InteractiveServer
 @inject IUserRepository UserRepo
 @attribute [Authorize(Policy = "AdminRoleRequired")]
 
@@ -14,19 +15,19 @@
     <a href="userpages/createuser">Create new account</a>
 </p>
 
+
 <QuickGrid Class="table" Items="Users">
-    <PropertyColumn Property="user => user.UserId" Title="ID" />
-    <PropertyColumn Property="user => user.FirstName" Title="First name" />
-    <PropertyColumn Property="user => user.LastName" Title="Last name" />
-    <PropertyColumn Property="user => user.Email" Title="Email" />
-    <PropertyColumn Property="user => user.Address" Title="Adress" />
-    <PropertyColumn Property="user => user.PhoneNumber" Title="Phone number" />
+    <PropertyColumn Property="user => user.UserId" Title="ID" Sortable="true" InitialSortDirection="SortDirection.Ascending" />
+    <PropertyColumn Property="user => user.FirstName" Title="First name" Sortable="true" />
+    <PropertyColumn Property="user => user.LastName" Title="Last name" Sortable="true" />
+    <PropertyColumn Property="user => user.Email" Title="Email" Sortable="true" />
+    <PropertyColumn Property="user => user.Address" Title="Adress" Sortable="true" />
+    <PropertyColumn Property="user => user.PhoneNumber" Title="Phone number" Sortable="true" />
 
 
     <TemplateColumn Context="user" Title="Handle">
-        <a href="@($"users/edit?userid={user.UserId}")">Edit</a> |
-        <a href="@($"users/details?userid={user.UserId}")">Details</a> |
-        <a href="@($"users/delete?userid={user.UserId}")">Delete</a>
+        <a href="@($"/userpages/edituser?userid={user.UserId}")">Edit</a> |
+        <a href="@($"/users/delete?userid={user.UserId}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
 
