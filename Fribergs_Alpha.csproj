@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\Pages\BookingPages\**" />
-    <Content Remove="Components\Pages\BookingPages\**" />
-    <EmbeddedResource Remove="Components\Pages\BookingPages\**" />
-    <None Remove="Components\Pages\BookingPages\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Data\AdminRepository.cs" />
     <Compile Remove="Data\CustomerRepository.cs" />
     <Compile Remove="Data\IAdmin.cs" />
@@ -36,6 +29,18 @@
     <Content Update="Components\Pages\CarPages\CarIndex.razor">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\BookingPages\BookingCreate.razor" />
+    <None Include="Components\Pages\BookingPages\BookingDelete.razor" />
+    <None Include="Components\Pages\BookingPages\BookingDetails.razor" />
+    <None Include="Components\Pages\BookingPages\BookingEdit.razor" />
+    <None Include="Components\Pages\BookingPages\BookingIndex.razor" />
   </ItemGroup>
 
 </Project>

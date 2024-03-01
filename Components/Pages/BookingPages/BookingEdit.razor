@@ -24,12 +24,12 @@ else
                 <input type="hidden" name="Booking.BookingId" value="@Booking.BookingId" />
                 <div class="mb-3">
                     <label for="pickupdate" class="form-label">PickUpDate:</label>
-                    <InputText id="pickupdate" @bind-Value="Booking.PickUpDate.ToString()" class="form-control" />
+                    <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" />
                     <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="returndate" class="form-label">ReturnDate:</label>
-                    <InputText id="returndate" @bind-Value="Booking.ReturnDate.ToString()" class="form-control" />
+                    <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
                     <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
                 </div>
                 <div class="mb-3">
@@ -56,7 +56,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Booking ??= await bookingRepository.GetBookingById(BookingId);
+        Booking ??= bookingRepository.GetBookingById(BookingId);
 
         if (Booking is null)
         {
