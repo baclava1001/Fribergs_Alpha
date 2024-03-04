@@ -14,12 +14,14 @@
     <a href="bookings/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="Bookings">
-    <PropertyColumn Property="booking => booking.User.Email" />
-    <PropertyColumn Property="booking => booking.Car.CarModel" />
-    <PropertyColumn Property="booking => booking.PickUpDate" />
-    <PropertyColumn Property="booking => booking.ReturnDate" />
-    <PropertyColumn Property="booking => booking.TotalSum" />
+<QuickGrid Class="table" Items="Bookings"
+           Sortable="true"
+           @ref="grid">
+    <PropertyColumn Property="booking => booking.User.Email" Sortable="true" />
+    <PropertyColumn Property="booking => booking.Car.CarModel" Sortable="true" />
+    <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
+    <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
+    <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
 
     <TemplateColumn Context="booking">
         <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
@@ -30,9 +32,10 @@
 
 @code {
     IQueryable<Booking>? Bookings;
+    QuickGrid<Booking>? grid;
 
     protected override void OnInitialized()
     {
-        Bookings = bookingRepository.GetAllBookings();
+        Bookings = bookingRepository.GetAllBookings().OrderBy(b => b.PickUpDate);
     }
 }
