@@ -13,6 +13,7 @@ namespace Fribergs_Alpha.Data
         }
 
         public List<Booking> GetAllBookings()
+
         {
             return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.User).OrderBy(b => b.BookingId).ToList();
         }

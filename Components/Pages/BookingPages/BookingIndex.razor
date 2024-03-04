@@ -1,12 +1,18 @@
 ﻿@page "/bookings"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@using Microsoft.EntityFrameworkCore
+@using Fribergs_Alpha.Data
+@inject IBooking bookingRepository
+@inject ICar carRepository
 @using Fribergs_Alpha.Models
+
 @using System.Security.Claims
 @attribute [Authorize]
 
 <PageTitle>Bookings</PageTitle>
+
+
 
 
 
@@ -167,3 +173,4 @@
 
 
 }
+
