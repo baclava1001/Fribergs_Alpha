@@ -1,8 +1,11 @@
 ﻿@page "/bookings"
 @using Microsoft.AspNetCore.Components.QuickGrid
-@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@using Microsoft.EntityFrameworkCore
+@using Fribergs_Alpha.Data
+@inject IBooking bookingRepository
+@inject ICar carRepository
 @using Fribergs_Alpha.Models
-
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 <PageTitle>Index</PageTitle>
 
 <h1>Index</h1>
@@ -11,10 +14,14 @@
     <a href="bookings/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="bookingRepository.GetAllBookings().AsQueryable()">
-    <PropertyColumn Property="booking => booking.PickUpDate" />
-    <PropertyColumn Property="booking => booking.ReturnDate" />
-    <PropertyColumn Property="booking => booking.TotalSum" />
+<QuickGrid Class="table" Items="Bookings"
+           Sortable="true"
+           @ref="grid">
+    <PropertyColumn Property="booking => booking.User.Email" Sortable="true" />
+    <PropertyColumn Property="booking => booking.Car.CarModel" Sortable="true" />
+    <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
+    <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
+    <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
 
     <TemplateColumn Context="booking">
         <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
@@ -22,3 +29,13 @@
         <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
+
+@code {
+    IQueryable<Booking>? Bookings;
+    QuickGrid<Booking>? grid;
+
+    protected override void OnInitialized()
+    {
+        Bookings = bookingRepository.GetAllBookings().OrderBy(b => b.PickUpDate);
+    }
+}
