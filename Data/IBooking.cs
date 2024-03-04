@@ -4,7 +4,7 @@ namespace Fribergs_Alpha.Data
 {
     public interface IBooking
     {
-        IEnumerable<Booking> GetAllBookings();
+        IQueryable<Booking> GetAllBookings();
         Booking GetBookingById(int? id);
         void AddBooking(Booking booking);
         void UpdateBooking(Booking booking);
