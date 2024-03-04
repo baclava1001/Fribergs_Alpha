@@ -1,7 +1,9 @@
 ﻿@page "/bookings"
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
+@attribute [Authorize]
 
 <PageTitle>Index</PageTitle>
 
@@ -11,14 +13,94 @@
     <a href="bookings/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="bookingRepository.GetAllBookings().AsQueryable()">
-    <PropertyColumn Property="booking => booking.PickUpDate" />
-    <PropertyColumn Property="booking => booking.ReturnDate" />
-    <PropertyColumn Property="booking => booking.TotalSum" />
+@* all bookings *@
+<AuthorizeView Roles="AdminRoleRequired">
 
-    <TemplateColumn Context="booking">
-        <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-        <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-        <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <QuickGrid Class="table" Items="bookingRepository.GetAllBookings()">
+        <PropertyColumn Property="booking => booking.PickUpDate" />
+        <PropertyColumn Property="booking => booking.ReturnDate" />
+        <PropertyColumn Property="booking => booking.TotalSum" />
+
+        <TemplateColumn Context="booking">
+            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+
+</AuthorizeView>
+
+@* logged in customer bookings *@
+<AuthorizeView Roles="CustomerRoleRequired">
+    
+    @* currently active bookings *@
+
+    <QuickGrid Class="table" Items="bookingRepository.GetAllBookingsByUser(UserId).Where(x => x.PickUpDate >= Today)">
+        <PropertyColumn Property="booking => booking.PickUpDate" />
+        <PropertyColumn Property="booking => booking.ReturnDate" />
+        <PropertyColumn Property="booking => booking.TotalSum" />
+
+        <TemplateColumn Context="booking">
+            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+        </TemplateColumn>
+    </QuickGrid>
+
+
+    @* upcoming bookings *@
+
+    <QuickGrid Class="table" Items="bookingRepository.GetAllBookingsByUser(UserId).Where(x => x.PickUpDate >= Today)">
+        <PropertyColumn Property="booking => booking.PickUpDate" />
+        <PropertyColumn Property="booking => booking.ReturnDate" />
+        <PropertyColumn Property="booking => booking.TotalSum" />
+
+        <TemplateColumn Context="booking">
+            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+
+
+
+    @* historical bookings *@
+
+    <QuickGrid Class="table" Items="bookingRepository.GetAllBookingsByUser(UserId).Where(x => x.PickUpDate >= Today)">
+        <PropertyColumn Property="booking => booking.PickUpDate" />
+        <PropertyColumn Property="booking => booking.ReturnDate" />
+        <PropertyColumn Property="booking => booking.TotalSum" />
+
+        <TemplateColumn Context="booking">
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+        </TemplateColumn>
+    </QuickGrid>
+
+
+
+</AuthorizeView>
+
+
+@code{
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    public IQueryable BookingsByUser { get; set; } = default!;
+
+    public int UserId { get; set; }
+
+    public bool IsCustomer { get; set; }
+
+    public DateTime Today { get; set; } = DateTime.Now.Date;
+
+
+    protected override void OnInitialized()
+    {
+        var identity = HttpContext.User.FindFirst("UserData");
+        UserId = Int32.Parse(identity!.Value);
+        
+
+        
+    }
+
+
+}
