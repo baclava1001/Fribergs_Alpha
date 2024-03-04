@@ -15,7 +15,7 @@ namespace Fribergs_Alpha.Models
         public DateTime ReturnDate { get; set; }
         [DisplayName("Total Sum")]
         public double? TotalSum { get; set; }
-        [DisplayName("Customer"), Required]
+        [DisplayName("User"), Required]
         public User? User { get; set; }
         
 
@@ -23,6 +23,8 @@ namespace Fribergs_Alpha.Models
         {
             PickUpDate = DateTime.Now;
             ReturnDate = DateTime.Now;
+            Car = new Car();
+            User = new User();
             //PickUpDate = DateOnly.FromDateTime(DateTime.Now);
             //ReturnDate = DateOnly.FromDateTime(DateTime.Now);
         }

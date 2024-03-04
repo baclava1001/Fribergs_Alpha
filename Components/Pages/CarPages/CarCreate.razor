@@ -1,9 +1,11 @@
 ﻿@page "/cars/create"
-@inject ICar carRepository
-@inject ICarCategory carCategoryRepository
+@using Microsoft.AspNetCore.Authorization
 @using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
+@inject ICar carRepository
+@inject ICarCategory carCategoryRepository
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Policy = "AdminRoleRequired")]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Create</PageTitle>

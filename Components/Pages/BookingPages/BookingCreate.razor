@@ -1,7 +1,10 @@
 ﻿@page "/bookings/create"
-@inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
+@using Microsoft.AspNetCore.Authorization
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@inject Fribergs_Alpha.Data.ICar carRepository
+@inject Fribergs_Alpha.Data.IUserRepository userRepository
 @inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
@@ -13,10 +16,14 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        @* TODO: Add input for User and Car *@
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
+            @* TODO: Add input for User and Car *@
+            <input type="hidden" name="carid" value="carid" />
+            <div class="mb-3">
+                <label for="car" class="form-label">@Booking.Car.Brand @Booking.Car.CarModel @Booking.Car.Year (@Booking.Car.Color)</label>
+            </div>
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
                 <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" /> 
@@ -46,10 +53,39 @@
     [SupplyParameterFromForm]
     public Booking Booking { get; set; } = new();
 
+    // Get CarId from previous page
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    private User _user = new User();
+
+    protected override void OnInitialized()
+    {
+        if (CarExists(CarId))
+        {
+            Booking.Car = carRepository.GetCarById(CarId);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+
+        // TODO: Get user from AuthResult(?)
+        //_user = ??????????????????????? TOBIAS!!!!!!!!!!!!!!!!
+        AuthResult loggedInUser = new AuthResult();
+        _user = userRepository.GetUserById(loggedInUser.IdentityClaims.);
+    }
+
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public void AddBooking()
     {
         bookingRepository.AddBooking(Booking);
         NavigationManager.NavigateTo("/bookings");
+    }
+
+    bool CarExists(int carid)
+    {
+        return carRepository.GetAllCars().Any(e => e.CarId == carid);
     }
 }

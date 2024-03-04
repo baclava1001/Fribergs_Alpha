@@ -1,10 +1,12 @@
 ﻿@page "/Cars/edit"
-@inject ICar carRepository
-@inject ICarCategory carCategoryRepository
+@using Microsoft.AspNetCore.Authorization
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
-@inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@inject ICar carRepository
+@inject ICarCategory carCategoryRepository
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Policy = "AdminRoleRequired")]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Edit</PageTitle>
@@ -24,7 +26,7 @@ else
             <EditForm method="post" Model="Car" OnValidSubmit="UpdateCar" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <input type="hidden" name="Car.CarId" value="@Car.CarId" />
+                <input type="hidden" name="Car.CarId" value="@CarId" />
                 <div class="mb-3">
                     <label for="carcategory" class="form-label">CarCategory:</label>
                     <InputSelect id="categoryEdit" @bind-Value="Car.Category.CarCategoryId" class="form-control">

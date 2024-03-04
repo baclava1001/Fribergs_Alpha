@@ -1,10 +1,11 @@
 ﻿@page "/cars"
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
+@using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
 @inject ICar carRepository
 @inject ICarCategory carCategoryRepository
-@using Fribergs_Alpha.Models
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
@@ -30,9 +31,14 @@
     </TemplateColumn>
 
     <TemplateColumn Context="car" Title="Handle">
-        <a href="@($"cars/edit?carid={car.CarId}")">Edit</a> |
+        <a href="@($"bookings/create?carid={car.CarId}")">Rent now</a> |
         <a href="@($"cars/details?carid={car.CarId}")">Details</a> |
-        <a href="@($"cars/delete?carid={car.CarId}")">Delete</a>
+        <AuthorizeView Policy="AdminRoleRequired">
+            <Authorized>
+                <a href="@($"cars/edit?carid={car.CarId}")">Edit</a> |
+                <a href="@($"cars/delete?carid={car.CarId}")">Delete</a>
+            </Authorized>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 

@@ -38,7 +38,12 @@
             <dd class="col-sm-10"><img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" /></dd>
         </dl>
         <div>
-            <a href="@($"/cars/edit?carid={car.CarId}")">Edit</a> |
+            <AuthorizeView Policy="AdminRoleRequired">
+                <Authorized>
+                    <a href="@($"/cars/edit?carid={car.CarId}")">Edit</a> |
+                </Authorized>
+            </AuthorizeView>
+            <a href="@($"bookings/create?carid={car.CarId}")">Rent now</a> |
             <a href="@($"/cars")">Back to List</a>
         </div>
     }
