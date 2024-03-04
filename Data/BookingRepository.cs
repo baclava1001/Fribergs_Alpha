@@ -12,9 +12,14 @@ namespace Fribergs_Alpha.Data
             _applicationDbContext = applicationDbContext;
         }
 
-        public IEnumerable<Booking> GetAllBookings()
+        public IQueryable<Booking> GetAllBookings()
         {
-            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.User).OrderBy(b => b.BookingId).ToList();
+            return _applicationDbContext.Bookings.Include(b => b.Car).Include(b => b.User).OrderBy(b => b.BookingId).AsQueryable();
+        }
+
+        public IQueryable<Booking> GetAllBookingsByUser(int userId)
+        {
+            return _applicationDbContext.Bookings.Where(x => x.User!.UserId == userId).Include(b => b.Car).Include(b => b.User).OrderBy(b => b.BookingId).AsQueryable();
         }
 
         public Booking GetBookingById(int? bookingId)
