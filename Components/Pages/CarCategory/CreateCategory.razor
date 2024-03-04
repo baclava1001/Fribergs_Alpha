@@ -39,8 +39,8 @@
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public void AddCarCategory(/* CarCategory carCategory */)
     {
-        var carCategory = CarCategory; 
-        CarCategoryRepository.AddCarCategory(carCategory);        
+        // var carCategory = CarCategory; 
+        CarCategoryRepository.AddCarCategory(CarCategory);        
         NavigationManager.NavigateTo("/carcategories");
     }
 }

@@ -83,6 +83,8 @@
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public void AddCar()
     {
+        // TODO: Added this line to manually get Category name. Fixed issue with disappearing text
+        Car.Category.Category = carCategoryRepository.GetCarCategoryById(Car.Category.CarCategoryId).Category;
         carRepository.AddCar(Car);
         NavigationManager.NavigateTo("/cars");
     }

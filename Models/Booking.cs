@@ -10,7 +10,6 @@ namespace Fribergs_Alpha.Models
         [Required]
         public Car? Car { get; set; }
         [DisplayName("Pick-up Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
-        // TODO: Changed to DateTime for better compatibility - unsure if it works
         public DateTime PickUpDate { get; set; }
         [DisplayName("Return Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
         public DateTime ReturnDate { get; set; }

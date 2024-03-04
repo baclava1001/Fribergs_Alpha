@@ -27,15 +27,18 @@ else
                 <input type="hidden" name="Car.CarId" value="@Car.CarId" />
                 <div class="mb-3">
                     <label for="carcategory" class="form-label">CarCategory:</label>
-                    <InputSelect id="category" @bind-Value="Car.Category.CarCategoryId" class="form-control">
+                    <InputSelect id="categoryEdit" @bind-Value="Car.Category.CarCategoryId" class="form-control">
                         @foreach (var category in carCategoryRepository.GetAllCarCategories())
                         {
                             if (category != null)
                             {
-                                <option value="@category.CarCategoryId">@category.Category</option>
                                 if (category.CarCategoryId == Car.Category.CarCategoryId)
                                 {
                                     <option value="@category.CarCategoryId" selected="selected">@category.Category</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.CarCategoryId">@category.Category</option>
                                 }
                             }
                         }
@@ -112,6 +115,8 @@ else
 
         try
         {
+            // TODO: Added this line to manually get Category name. Fixed issue with double text in drop down
+            Car.Category.Category = carCategoryRepository.GetCarCategoryById(Car.Category.CarCategoryId).Category;
             carRepository.UpdateCar(Car);
 
         }
