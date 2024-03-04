@@ -1,0 +1,135 @@
+﻿@page "/userpages/edituser"
+@using Fribergs_Alpha.Data
+@using Fribergs_Alpha.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+@attribute [Authorize(Policy = "AdminRoleRequired")]
+
+@inject IUserRepository UserRepo
+@inject NavigationManager NavigationManager
+
+<h3>Edit user account</h3>
+
+<h4>ID: @User.UserId Name: @User.FirstName @User.LastName</h4>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="User" OnValidSubmit="UpdateUser" FormName="edit">
+            <DataAnnotationsValidator />
+
+            <input type="hidden" name="User.UserId" value="@User.UserId" />
+
+            <div class="mb-3">
+                <label for="firstname" class="form-label">
+                    First name:
+                </label>
+                <InputText id="firstname" @bind-Value="User.FirstName" class="form-control" />
+                <ValidationMessage For="() => User.FirstName" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="lastname" class="form-label">
+                    Last name:
+                </label>
+                <InputText id="lastname" @bind-Value="User.LastName" class="form-control" />
+                <ValidationMessage For="() => User.LastName" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">
+                    Email:
+                </label>
+                <InputText id="email" @bind-Value="User.Email" class="form-control" />
+                <ValidationMessage For="() => User.Email" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="adress" class="form-label">
+                    Adress:
+                </label>
+                <InputText id="adress" @bind-Value="User.Address" class="form-control" />
+                <ValidationMessage For="() => User.Address" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="phonenumber" class="form-label">
+                    Phone number:
+                </label>
+                <InputText id="phonenumber" @bind-Value="User.PhoneNumber" class="form-control" />
+                <ValidationMessage For="() => User.PhoneNumber" class="text-danger" />
+            </div>
+
+            <div class="mb-3 bg-danger p-1 text-center">
+                <InputCheckbox @bind-Value="User.AdminRole" />
+                <label for="adminrole" class="form-label">
+                    Grant user administrator rights?
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/userpages/users">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int UserId { get; set; }
+
+    [SupplyParameterFromForm]
+    public User? User { get; set; }
+
+    protected override void OnInitialized()
+    {
+        User ??= UserRepo.GetUserById(UserId);
+
+        if (User is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+
+    public void UpdateUser()
+    {
+        // carRepository.UpdateUser(User!).State = EntityState.Modified;
+
+        try
+        {
+            UserRepo.UpdateUser(User);
+
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!UserExists(User!.UserId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        if (User.AdminRole)
+        {
+            NavigationManager.NavigateTo("/userpages/users/Admin");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/userpages/users/Customer");
+        }
+    }
+
+    bool UserExists(int carid)
+    {
+        return UserRepo.GetAllUsers().Any(e => e.UserId == carid);
+    }
+}
