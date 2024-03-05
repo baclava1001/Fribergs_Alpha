@@ -38,8 +38,24 @@
 
     @* upcoming bookings filtered by Booking.PickUpDate *@
 
-    @* <<< Linus hanterar >>> *@
+    <h4>Upcoming bookings</h4>
+    <hr />
 
+    <QuickGrid Class="table" Items="AllBookings"
+               Sortable="true"
+               @ref="grid">
+        <PropertyColumn Property="booking => booking.User.Email" Sortable="true" />
+        <PropertyColumn Property="booking => booking.Car.CarModel" Sortable="true" />
+        <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
+        <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
+        <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
+
+        <TemplateColumn Context="booking">
+            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
 
 
     @* historical bookings *@
@@ -140,6 +156,8 @@
     public IQueryable<Booking>? AllBookings { get; set; }
 
     public IQueryable<Booking>? AllBookingsByUser { get; set; }
+
+    QuickGrid<Booking>? grid;
 
     public int UserId { get; set; }
 
