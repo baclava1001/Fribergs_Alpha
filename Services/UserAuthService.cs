@@ -2,6 +2,7 @@
 using Fribergs_Alpha.Data;
 using Fribergs_Alpha.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
 namespace Fribergs_Alpha.Services
@@ -9,10 +10,12 @@ namespace Fribergs_Alpha.Services
     public class UserAuthService
     {
         private readonly IUserRepository _userRepo;
+        private readonly AuthenticationStateProvider _authState;
 
-        public UserAuthService(IUserRepository userRepo)
+        public UserAuthService(IUserRepository userRepo, AuthenticationStateProvider authState)
         {
             _userRepo = userRepo;
+            _authState = authState;
         }
 
         // Primary user authentication function. Takes in user login credentials (email, password) and searches for
@@ -31,7 +34,6 @@ namespace Fribergs_Alpha.Services
 
                 if (user.AdminRole)
                 {
-                    claims.Add(new Claim(type: ClaimTypes.Authentication, "Passed"));
                     claims.Add(new Claim(type: ClaimTypes.Role, "Admin"));
                     claims.Add(new Claim(type: ClaimTypes.Name, $"ADMIN {user.FirstName} {user.LastName}"));
                     claims.Add(new Claim(type: ClaimTypes.UserData, user.UserId.ToString()));
@@ -39,7 +41,6 @@ namespace Fribergs_Alpha.Services
                 }
                 else
                 {
-                    claims.Add(new Claim(type: ClaimTypes.Authentication, "Passed"));
                     claims.Add(new Claim(type: ClaimTypes.Role, "Customer"));
                     claims.Add(new Claim(type: ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
                     claims.Add(new Claim(type: ClaimTypes.UserData, user.UserId.ToString()));
@@ -56,6 +57,22 @@ namespace Fribergs_Alpha.Services
             result.IdentityClaims = new ClaimsPrincipal(identity);
 
             return result;
+        }
+
+        public async Task<int> GetUserIdAsync()
+        {
+            var authState = await _authState.GetAuthenticationStateAsync();
+            var userId = Int32.Parse(authState.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData).Value);
+
+            return userId;
+        }
+
+        public async Task<string> GetUserRoleAsync()
+        {
+            var authState = await _authState.GetAuthenticationStateAsync();
+            var userRole = authState.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
+
+            return userRole;
         }
     }
 }
