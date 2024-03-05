@@ -5,11 +5,14 @@
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject UserAuthService authService
 @using Fribergs_Alpha.Models
+
 @using System.Security.Claims
 @rendermode InteractiveServer
 @attribute [Authorize]
 
 <PageTitle>Bookings</PageTitle>
+
+
 
 
 
@@ -182,4 +185,6 @@
             }
 
     }
+
+
 }
