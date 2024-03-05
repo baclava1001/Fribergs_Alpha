@@ -16,16 +16,14 @@
     <a href="cars/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="Cars"
-           Sortable="true"
-           @ref="grid">
-    <PropertyColumn Property="car => car.Category.Category" Title="Category" Sortable="true" />
-    <PropertyColumn Property="car => car.Brand" Title="Brand" Sortable="true" />
-    <PropertyColumn Property="car => car.CarModel" Title="Model" Sortable="true"/>
-    <PropertyColumn Property="car => car.Year" Title="Year" Sortable="true" />
-    <PropertyColumn Property="car => car.Color" Title="Color" Sortable="true" />
+<QuickGrid Class="table" Items="Cars">
+    <PropertyColumn Property="car => car.Category.Category" Title="Category" />
+    <PropertyColumn Property="car => car.Brand" Title="Brand" />
+    <PropertyColumn Property="car => car.CarModel" Title="Model" />
+    <PropertyColumn Property="car => car.Year" Title="Year" />
+    <PropertyColumn Property="car => car.Color" Title="Color" />
     <PropertyColumn Property="car => car.Description" Title="Description" />
-    <PropertyColumn Property="car => car.PricePerDay" Title="SEK/Day" Sortable="true" />
+    <PropertyColumn Property="car => car.PricePerDay" Title="SEK/Day" />
     
     <TemplateColumn Context="car" Title="Picture">
         <img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-thumbnail" />
@@ -40,10 +38,9 @@
 
 @code{
     IQueryable<Car>? Cars;
-    QuickGrid<Car>? grid;
 
     protected override void OnInitialized()
     {
-        Cars = carRepository.GetAllCars().OrderBy(c => c.Category.Category);
+        Cars = carRepository.GetAllCars();
     }
 }

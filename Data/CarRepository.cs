@@ -20,7 +20,7 @@ namespace Fribergs_Alpha.Data
 
         public IQueryable<Car> GetAllCars()
         {
-            return _applicationDbContext.Cars.Include(c => c.Category).OrderBy(c => c.Category).ThenBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).AsQueryable();
+            return _applicationDbContext.Cars.Include(c => c.Category).OrderBy(c => c.Brand).ThenBy(c => c.CarModel).ThenBy(c => c.CarId).AsQueryable();
         }
 
         public void AddCar(Car car)

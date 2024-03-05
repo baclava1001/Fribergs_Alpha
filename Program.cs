@@ -67,8 +67,8 @@ namespace Fribergs_Alpha
             // Provide authentication to all component render modes.
             builder.Services.AddCascadingAuthenticationState();
 
-            // Login authentication service that takes in user credentials and returns identityclaims.
-            builder.Services.AddScoped<UserAuthService>();
+            // Login authentication service that takes in user credentials and returns identity claims.
+            builder.Services.AddTransient<UserAuthService>();
 
             var app = builder.Build();
 

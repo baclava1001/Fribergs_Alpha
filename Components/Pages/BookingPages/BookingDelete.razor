@@ -1,10 +1,8 @@
 ﻿@page "/bookings/delete"
-@inject IBooking bookingRepository
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
-@using Fribergs_Alpha.Data
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Delete</PageTitle>
 
@@ -18,16 +16,7 @@
     {
         <p><em>Loading...</em></p>
     }
-    else
-    {
-        <dl class="row">
-            <dt class="col-sm-2">Car</dt>
-            <dd class="col-sm-10">@booking.Car</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">User</dt>
-            <dd class="col-sm-10">@booking.User</dd>
-        </dl>
+    else {
         <dl class="row">
             <dt class="col-sm-2">PickUpDate</dt>
             <dd class="col-sm-10">@booking.PickUpDate</dd>
@@ -65,10 +54,7 @@
 
     public void DeleteBooking()
     {
-        if (booking != null)
-        {
-            bookingRepository.DeleteBooking(booking!);
-            NavigationManager.NavigateTo("/bookings");
-        }
+        bookingRepository.DeleteBooking(booking);
+        NavigationManager.NavigateTo("/bookings");
     }
 }

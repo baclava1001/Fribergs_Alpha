@@ -1,7 +1,6 @@
 ﻿@page "/bookings/details"
-@inject IBooking bookingRepository
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
 @using Fribergs_Alpha.Models
-@using Fribergs_Alpha.Data
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
 
@@ -18,17 +17,12 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">Car</dt>
-            <dd class="col-sm-10">@booking.Car.CarModel</dd>
-            <dt class="col-sm-2">Customer</dt>
-            <dd class="col-sm-10">@booking.User.Email</dd>
             <dt class="col-sm-2">PickUpDate</dt>
             <dd class="col-sm-10">@booking.PickUpDate</dd>
             <dt class="col-sm-2">ReturnDate</dt>
             <dd class="col-sm-10">@booking.ReturnDate</dd>
             <dt class="col-sm-2">TotalSum</dt>
             <dd class="col-sm-10">@booking.TotalSum</dd>
-
         </dl>
         <div>
             <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
