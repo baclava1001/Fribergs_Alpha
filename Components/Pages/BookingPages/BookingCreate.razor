@@ -2,17 +2,19 @@
 @using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
 @using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
 @inject Fribergs_Alpha.Data.IUserRepository userRepository
 @inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Book car</PageTitle>
 
-<h1>Create</h1>
+<h1>Booking</h1>
 
-<h4>Booking</h4>
+<h4>@Booking.Car.Brand @Booking.Car.CarModel @Booking.Car.Year (@Booking.Car.Color)</h4>
+<img class="" scr="@Booking.Car.CarPicUrl" />
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,7 +24,11 @@
             @* TODO: Add input for User and Car *@
             <input type="hidden" name="carid" value="carid" />
             <div class="mb-3">
-                <label for="car" class="form-label">@Booking.Car.Brand @Booking.Car.CarModel @Booking.Car.Year (@Booking.Car.Color)</label>
+                <label for="firstname" class="form-label">Name:</label>
+                <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
+                <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
+                <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
+                <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
             </div>
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
@@ -33,7 +39,7 @@
                 <label for="returndate" class="form-label">ReturnDate:</label> 
                 <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
                 <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
-            </div>        
+            </div>
             <div class="mb-3">
                 <label for="totalsum" class="form-label">TotalSum:</label> 
                 <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
@@ -57,8 +63,6 @@
     [SupplyParameterFromQuery]
     public int CarId { get; set; }
 
-    private User _user = new User();
-
     protected override void OnInitialized()
     {
         if (CarExists(CarId))
@@ -70,11 +74,11 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-
-        // TODO: Get user from AuthResult(?)
-        //_user = ??????????????????????? TOBIAS!!!!!!!!!!!!!!!!
-        AuthResult loggedInUser = new AuthResult();
-        _user = userRepository.GetUserById(loggedInUser.IdentityClaims.);
+        int userId = 1;
+        // TODO: Get user
+        Booking.User = userRepository.GetUserById(userId);
+        //_userId = Int32.Parse(httpContext.User.FindFirstValue(ClaimTypes.UserData));
+        // _user = userRepository.GetUserById(userId);
     }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
