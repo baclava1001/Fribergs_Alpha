@@ -1,11 +1,26 @@
 ﻿@page "/customer"
+@using Fribergs_Alpha.Services
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize (Policy = "CustomerRoleRequired")]
+@inject UserAuthService authService
 
 <h3>Customer</h3>
 
 <span>You are currently in the Customer section</span>
 
+<span>Logged in with user ID: @UserId</span>
+
+<NavLink class="nav-link" href="/bookings">List all bookings</NavLink>
+
 @code {
 
+    public int UserId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        UserId = authService.GetUserIdAsync().Result;
+
+
+
+    }
 }
