@@ -1,6 +1,4 @@
 ﻿@page "/admin"
-@using Microsoft.AspNetCore.Authorization
-@using Fribergs_Alpha.Components.Pages.UserPages
 @attribute [Authorize(Policy = "AdminRoleRequired")]
 
 
@@ -45,9 +43,7 @@
             <div class="row">
                 <NavLink class="nav-link" href="/cars">View cars</NavLink>
             </div>
-            <div class="row">
-                <NavLink class="nav-link" href="/cars">View cars test test</NavLink>
-            </div>
+            
         </div>
 
         <div class="col">
@@ -64,7 +60,13 @@
             </div>
 
             <div class="row">
-                <NavLink class="nav-link" href="/bookings">List all bookings</NavLink>
+                <NavLink class="nav-link" href="/bookings/present">List active bookings</NavLink>
+            </div>
+            <div class="row">
+                <NavLink class="nav-link" href="/bookings/future">List upcoming bookings</NavLink>
+            </div>
+            <div class="row">
+                <NavLink class="nav-link" href="/bookings/past">List historical bookings</NavLink>
             </div>
 
         </div>
