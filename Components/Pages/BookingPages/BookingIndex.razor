@@ -1,9 +1,12 @@
 ﻿@page "/bookings"
+@using Fribergs_Alpha.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
+@inject UserAuthService authService
 @using Fribergs_Alpha.Models
 @using System.Security.Claims
+@rendermode InteractiveServer
 @attribute [Authorize]
 
 <PageTitle>Bookings</PageTitle>
@@ -19,11 +22,11 @@
     <hr />
 
     <QuickGrid Class="table" Items="AllBookings.Where(x => x.PickUpDate <= Today && x.ReturnDate >= Today)">
-        <PropertyColumn Property="booking => booking.BookingId" />
-        <PropertyColumn Property="booking => booking.Car!.CarId" />
-        <PropertyColumn Property="booking => booking.PickUpDate" />
-        <PropertyColumn Property="booking => booking.ReturnDate" />
-        <PropertyColumn Property="booking => booking.TotalSum" />
+        <PropertyColumn Property="booking => booking.BookingId" Sortable="true" />
+        <PropertyColumn Property="booking => booking.Car!.CarId" Sortable="true" />
+        <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
+        <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
+        <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
 
         <TemplateColumn Context="booking">
             <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
@@ -65,7 +68,7 @@
 
 @* logged in customer bookings *@
 <AuthorizeView Roles="Customer">
-    
+
     @* currently active bookings *@
 
     <h4>Active bookings</h4>
@@ -130,7 +133,7 @@
 </AuthorizeView>
 
 
-@code{
+@code {
     [CascadingParameter]
     public HttpContext HttpContext { get; set; } = default!;
 
@@ -147,23 +150,18 @@
 
     protected override void OnInitialized()
     {
-        Role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            Role = authService.GetUserRoleAsync().Result;
+            UserId = authService.GetUserIdAsync().Result;
 
-        UserId = Int32.Parse(HttpContext.User.FindFirstValue(ClaimTypes.UserData));
+            if (Role == "Admin" && AllBookings == null)
+            {
+                AllBookings = bookingRepository.GetAllBookings().AsQueryable();
+            }
 
+            if (Role == "Customer" && AllBookingsByUser == null)
+            {
+                AllBookingsByUser = bookingRepository.GetAllBookingsByUser(UserId).AsQueryable();
+            }
 
-        if (Role == "Admin" && AllBookings == null)
-        {
-            AllBookings = bookingRepository.GetAllBookings().AsQueryable();
-        }
-
-        if (Role == "Customer" && AllBookingsByUser == null)
-        {
-            AllBookingsByUser = bookingRepository.GetAllBookingsByUser(UserId).AsQueryable();
-        }
-
-        
     }
-
-
 }
