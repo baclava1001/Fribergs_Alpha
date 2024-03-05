@@ -1,34 +1,40 @@
 ﻿@page "/bookings/create"
 @using Fribergs_Alpha.Models
 @using Fribergs_Alpha.Data
+@using Fribergs_Alpha.Services
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
 @inject Fribergs_Alpha.Data.IUserRepository userRepository
 @inject NavigationManager NavigationManager
+@inject UserAuthService authService
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Book car</PageTitle>
 
 <h1>Booking</h1>
 
-<h4>@Booking.Car.Brand @Booking.Car.CarModel @Booking.Car.Year (@Booking.Car.Color)</h4>
-<img class="" scr="@Booking.Car.CarPicUrl" />
+<h4>@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h4>
+@* TODO: Fix image not rendering *@
+<img class="img-fluid" scr="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" />
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
+        <EditForm method="post" EditContext="_editContext" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            @* TODO: Add input for User and Car *@
             <input type="hidden" name="carid" value="carid" />
-            <div class="mb-3">
-                <label for="firstname" class="form-label">Name:</label>
-                <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
-                <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
-                <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
-                <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+            <div class="col-8"
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">Name:</label>
+                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
+                 </div>
+                <div class="mb-3">
+                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+                </div>
             </div>
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
@@ -37,14 +43,14 @@
             </div>        
             <div class="mb-3">
                 <label for="returndate" class="form-label">ReturnDate:</label> 
-                <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
-                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
+                <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" />
+                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="totalsum" class="form-label">TotalSum:</label> 
-                <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
+                <label for="totalsum" class="form-label">TotalSum:</label>
+                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" @bind-Value:after="UpdateTotalSum" class="form-control" />
                 <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>        
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -55,16 +61,22 @@
 </div>
 
 @code {
+        [SupplyParameterFromForm]
+        public Booking Booking { get; set; } = new();
+        // Get CarId from previous page
+        [SupplyParameterFromQuery]
+        public int CarId { get; set; }
+    public int _userId;
 
-    [SupplyParameterFromForm]
-    public Booking Booking { get; set; } = new();
+    // EditContext is passed to the html-element EditForm, instead of Model
+    EditContext _editContext;
 
-    // Get CarId from previous page
-    [SupplyParameterFromQuery]
-    public int CarId { get; set; }
+    ValidationMessageStore modelState;
 
     protected override void OnInitialized()
     {
+        _editContext = new EditContext(Booking);
+
         if (CarExists(CarId))
         {
             Booking.Car = carRepository.GetCarById(CarId);
@@ -74,11 +86,28 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-        int userId = 1;
-        // TODO: Get user
-        Booking.User = userRepository.GetUserById(userId);
-        //_userId = Int32.Parse(httpContext.User.FindFirstValue(ClaimTypes.UserData));
-        // _user = userRepository.GetUserById(userId);
+        // Get user id, then user
+        _userId = authService.GetUserIdAsync().Result;
+        Booking.User = userRepository.GetUserById(_userId);
+
+        Booking.TotalSum = 0;
+    }
+
+    bool CarExists(int carid)
+    {
+        return carRepository.GetAllCars().Any(e => e.CarId == carid);
+    }
+
+    public void UpdateTotalSum()
+    {
+        if (Booking.ReturnDate > Booking.PickUpDate)
+        {
+            // Clear the state for the TotalSum property
+            modelState.Clear(_editContext.Field(nameof(Booking.TotalSum)));
+            double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+            Booking.TotalSum = Booking.Car.PricePerDay * days;
+            _editContext.NotifyValidationStateChanged();
+        }
     }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -86,10 +115,5 @@
     {
         bookingRepository.AddBooking(Booking);
         NavigationManager.NavigateTo("/bookings");
-    }
-
-    bool CarExists(int carid)
-    {
-        return carRepository.GetAllCars().Any(e => e.CarId == carid);
     }
 }

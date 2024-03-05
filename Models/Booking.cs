@@ -9,6 +9,8 @@ namespace Fribergs_Alpha.Models
         public int BookingId { get; set; }
         [Required]
         public Car? Car { get; set; }
+
+        // TODO: Client-side validation for dates
         [DisplayName("Pick-up Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
         public DateTime PickUpDate { get; set; }
         [DisplayName("Return Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true), Required]
