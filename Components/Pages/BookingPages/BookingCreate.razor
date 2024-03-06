@@ -5,7 +5,7 @@
 @inject Fribergs_Alpha.Data.IUserRepository userRepository
 @inject NavigationManager NavigationManager
 @inject UserAuthService authService
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@rendermode InteractiveServer
 
 <PageTitle>Book car</PageTitle>
 
@@ -35,12 +35,12 @@
             </div>
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
-                <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" /> 
+                <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
                 <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
             </div>        
             <div class="mb-3">
                 <label for="returndate" class="form-label">ReturnDate:</label> 
-                <InputDate id="pickupdate" @bind-Value="Booking.ReturnDate" class="form-control" />
+                <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
                 <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
             </div>
             <div class="mb-3">
@@ -55,22 +55,24 @@
 <AuthorizeView Policy="AdminRoleRequired">
     <Authorized>
         <div>
-            <a href="/bookings">Back to List</a>
+            <a href="/bookings/all">Back to List</a>
         </div>
     </Authorized>
 </AuthorizeView>
 
 
 @code {
-        [SupplyParameterFromForm]
-        public Booking Booking { get; set; } = new();
-        
-        // Get CarId from previous page
-        [SupplyParameterFromQuery]
-        public int CarId { get; set; }
 
-        // Field variable to store user id
-        private int _userId;
+    [SupplyParameterFromForm]
+    public Booking Booking { get; set; } = new();
+
+    // Get CarId from previous page
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    // Field variable to store user id
+    private int _userId;
+
 
     protected override void OnInitialized()
     {
@@ -89,6 +91,8 @@
         Booking.User = userRepository.GetUserById(_userId);
 
         Booking.TotalSum = 0;
+        // Booking.PickUpDate = DateTime.Now;
+        // Booking.ReturnDate = DateTime.Now;
     }
 
     bool CarExists(int carid)
@@ -100,6 +104,34 @@
     public void AddBooking()
     {
         bookingRepository.AddBooking(Booking);
-        NavigationManager.NavigateTo("/bookings");
+        NavigationManager.NavigateTo($@"/bookings/details?bookingid={Booking.BookingId}");
+    }
+
+    private void UpdateTotalSumOnPickup(ChangeEventArgs e)
+    {
+        Booking.PickUpDate = DateTime.Parse(e.Value.ToString());
+        double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+        if (days > 0)
+        {
+            Booking.TotalSum = days * Booking.Car.PricePerDay;
+        }
+        else
+        {
+            Booking.TotalSum = 0;
+        }
+    }
+
+    private void UpdateTotalSumOnReturn(ChangeEventArgs e)
+    {
+        Booking.ReturnDate = DateTime.Parse(e.Value.ToString());
+        double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+        if (days > 0)
+        {
+            Booking.TotalSum = days * Booking.Car.PricePerDay;
+        }
+        else
+        {
+            Booking.TotalSum = 0;
+        }
     }
 }

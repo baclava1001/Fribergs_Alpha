@@ -1,12 +1,7 @@
 using Fribergs_Alpha.Components;
 using Fribergs_Alpha.Data;
-using Fribergs_Alpha.Models;
 using Fribergs_Alpha.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 
 
 namespace Fribergs_Alpha
