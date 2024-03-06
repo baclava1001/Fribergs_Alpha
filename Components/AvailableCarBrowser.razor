@@ -1,0 +1,95 @@
+﻿@inject IBooking BookingRepository
+@inject ICar CarRepository
+@inject ICarCategory CategoryRepository
+
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+
+            <EditForm Model="FilterData" OnSubmit="ListAvailableCars" Enhance>
+
+                <label>
+                    Pickup date
+                    <InputDate @bind-Value="FilterData.FilterStartDate" />
+                </label>
+
+                <label>
+                    Return date
+                    <InputDate @bind-Value="FilterData.FilterEndDate" />
+                </label>
+
+                <label>
+                    Category
+                    <InputSelect @bind-Value="FilterData.CategoryId">
+
+                        <option value="none">
+                            Choose category
+                        </option>
+
+                        <option value="0">
+                            All
+                        </option>
+
+                        @foreach (var category in AvailableCategories)
+                        {
+                            <option value="@category.CarCategoryId">
+                                @category.Category
+                            </option>
+                        }
+
+                    </InputSelect>
+                </label>
+
+                <button type="submit" class="btn btn-primary"> Find </button>
+
+            </EditForm>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @if (InputFault)
+            {
+                <span>@Message</span>
+            }
+        </div>
+    </div>
+</div>
+
+
+@* @code {
+
+    [SupplyParameterFromForm]
+    public DateCategoryFilter FilterData { get; set; } = new DateCategoryFilter();
+
+    public List<CarCategory> AvailableCategories { get; set; } = new List<CarCategory>();
+
+    public List<Booking> AllFutureBookings { get; set; } = default!;
+
+    public List<Booking> ConflictingBookings { get; set; } = default!;
+
+    public List<Car> FilteredCars { get; set; } = default!;
+
+    public bool InputFault { get; set; } = false;
+
+    public string? Message { get; set; }
+
+
+
+
+    protected override void OnInitialized()
+    {
+        AllFutureBookings = BookingRepository.GetAllBookings().Where(x => x.PickUpDate >= DateTime.Now.Date).ToList();
+
+        AvailableCategories = CategoryRepository.GetAllCarCategories().ToList();
+    }
+
+    public void ListAvailableCars()
+    {
+
+        ConflictingBookings = AllFutureBookings.Where(x => x.PickUpDate <= FilterData.FilterStartDate).ToList();
+
+
+
+    }
+} *@
