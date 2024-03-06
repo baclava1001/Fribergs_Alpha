@@ -1,54 +1,130 @@
 ﻿@page "/login"
-@using Fribergs_Alpha.Services
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authentication.Cookies
-@using System.Security.Claims
-@using Fribergs_Alpha.Models
-@using System.ComponentModel.DataAnnotations
-@using System.ComponentModel
-
 @inject UserAuthService AuthService
+@inject IUserRepository UserRepository
 @inject NavigationManager NavigationManager
 
 
-<h3>Login</h3>
-
-<hr />
-
-@if (!AuthResult.AuthSuccess)
-{
-    <span class="text-danger">@AuthResult.ErrorMessage</span>
-}
+<div class="container">
+    <div class="row">
 
 
-<div class="row">
-    <div class="col-md-4">
+        <div class="col">
+        </div>
 
-        <EditForm method="post" Model="Credentials" OnValidSubmit="UserLoginAsync" FormName="LoginUser" Enhance>
-            <DataAnnotationsValidator />
+        @* Login to account column *@
+        <div class="col">
 
-            <div class="mb-3">
-                <label for="Email" class="form-label">
-                    Email
-                </label>
-                <InputText @bind-Value="Credentials.Email" Placeholder="Email" class="form-control" />
-                <ValidationMessage For="() => Credentials.Email" class="text-danger" />
+            <h3>Login</h3>
+            <hr />
+
+            @if (!AuthResult.AuthSuccess)
+            {
+                <span class="text-danger">@AuthResult.ErrorMessage</span>
+            }
+
+            <EditForm method="post" Model="Credentials" OnValidSubmit="UserLoginAsync" FormName="LoginUser" Enhance>
+                <DataAnnotationsValidator />
+
+                <div class="mb-3">
+                    <label for="Email" class="form-label">
+                        Email
+                    </label>
+                    <InputText @bind-Value="Credentials.Email" Placeholder="Email" class="form-control" />
+                    <ValidationMessage For="() => Credentials.Email" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="Password" class="form-label">
+                        Password
+                    </label>
+                    <InputText @bind-Value="Credentials.Password" Placeholder="Password" type="password" class="form-control" />
+                    <ValidationMessage For="() => Credentials.Password" />
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+
+            </EditForm>
+        </div>
+
+
+
+        @* Create account column *@
+        <div class="col">
+
+            <h3>Create account</h3>
+
+            <hr />
+
+            <div class="row">
+                <div class="col">
+
+                    <EditForm method="post" Model="User" OnValidSubmit="CreateUserAndLoginAsync" FormName="CreateUser" Enhance>
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                First name
+                            </label>
+                            <InputText @bind-Value="User.FirstName" placeholder="First name" class="form-control" />
+                            <ValidationMessage For="() => User.FirstName" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Last name
+                            </label>
+                            <InputText @bind-Value="User.LastName" placeholder="Last name" class="form-control" />
+                            <ValidationMessage For="() => User.LastName" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Adress
+                            </label>
+                            <InputText @bind-Value="User!.Address" placeholder="Adress" class="form-control" />
+                            <ValidationMessage For="() => User.Address" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Email
+                            </label>
+                            <InputText @bind-Value="User.Email" placeholder="Email" class="form-control" />
+                            <ValidationMessage For="() => User.Email" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Phone number
+                            </label>
+                            <InputText @bind-Value="User.PhoneNumber" placeholder="Phone number" class="form-control" />
+                            <ValidationMessage For="() => User.PhoneNumber" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Password
+                            </label>
+                            <InputText @bind-Value="User.Password" placeholder="password" class="form-control" />
+                            <ValidationMessage For="() => User.Password" class="text-danger" />
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+
+                    </EditForm>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="Password" class="form-label">
-                    Password
-                </label>
-                <InputText @bind-Value="Credentials.Password" Placeholder="Password" type="password" class="form-control" />
-                <ValidationMessage For="() => Credentials.Password" />
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </div>
+        </div>
 
-        </EditForm>
+        <div class="col">
+        </div>
+
     </div>
 </div>
-
 
 
 
@@ -57,11 +133,13 @@
     [CascadingParameter]
     public HttpContext HttpContext { get; set; } = default!;
 
-    [SupplyParameterFromForm]
+    [SupplyParameterFromForm(FormName = "LoginUser")]
     public LoginCredentials Credentials { get; set; } = new LoginCredentials();
 
-    public AuthResult AuthResult { get; set; } = new AuthResult();
+    [SupplyParameterFromForm(FormName = "CreateUser")]
+    public User User { get; set; } = new User() { AdminRole = false };
 
+    public AuthResult AuthResult { get; set; } = new AuthResult();
 
 
     public async Task UserLoginAsync()
@@ -74,6 +152,16 @@
 
             NavigationManager.NavigateTo(AuthResult.RedirectPath);
         }
+    }
+
+    public async Task CreateUserAndLoginAsync()
+    {
+        UserRepository.AddUser(User);
+
+        Credentials.Email = User.Email;
+        Credentials.Password = User.Password;
+
+        await UserLoginAsync();
     }
 
 }
