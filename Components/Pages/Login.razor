@@ -54,8 +54,12 @@
         <div class="col">
 
             <h3>Create account</h3>
-
             <hr />
+
+            @if (ExistingAccount)
+            {
+                <span class="text-danger">This email is registered to an existing account!</span>
+            }
 
             <div class="row">
                 <div class="col">
@@ -141,6 +145,8 @@
 
     public AuthResult AuthResult { get; set; } = new AuthResult();
 
+    public bool ExistingAccount { get; set; } = false;
+
 
     public async Task UserLoginAsync()
     {
@@ -156,12 +162,22 @@
 
     public async Task CreateUserAndLoginAsync()
     {
-        UserRepository.AddUser(User);
+        var userExists = UserRepository.GetUserByEmail(User.Email);
 
-        Credentials.Email = User.Email;
-        Credentials.Password = User.Password;
+        if (userExists == null)
+        {
+            ExistingAccount = false;
+            UserRepository.AddUser(User);
 
-        await UserLoginAsync();
+            Credentials.Email = User.Email;
+            Credentials.Password = User.Password;
+
+            await UserLoginAsync();
+        }
+        else
+        {
+            ExistingAccount = true;
+        }
     }
 
 }
