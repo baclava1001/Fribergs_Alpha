@@ -1,12 +1,6 @@
-﻿@page "/bookings"
-@using Fribergs_Alpha.Services
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.QuickGrid
+﻿@page "/bookings/{listtype}"
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject UserAuthService authService
-@using Fribergs_Alpha.Models
-
-@using System.Security.Claims
 @rendermode InteractiveServer
 @attribute [Authorize]
 
@@ -16,175 +10,215 @@
 
 
 
-@* admin/all bookings *@
-<AuthorizeView Roles="Admin">
+@* ADMIN/View all bookings *@
 
-    @* currently active bookings *@
+<AuthorizeView Context="authContext" Roles="Admin">
 
-    <h4>Active bookings</h4>
-    <hr />
+    @* ADMIN - currently active bookings *@
 
-    <QuickGrid Class="table" Items="AllBookings.Where(x => x.PickUpDate <= Today && x.ReturnDate >= Today)">
-        <PropertyColumn Property="booking => booking.BookingId" Sortable="true" />
-        <PropertyColumn Property="booking => booking.Car!.CarId" Sortable="true" />
-        <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
-        <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
-        <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
+    @if (ListType == "present")
+    {
+        <h4>Active bookings</h4>
+        <hr />
 
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+        <QuickGrid Class="table" Items="AllBookings!.Where(x => x.PickUpDate <= Today && x.ReturnDate >= Today)">
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.FirstName" Title="Firstname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.LastName" Title="Lastname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarId" Title="Car ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
 
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+                <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
+    }
 
-    @* upcoming bookings filtered by Booking.PickUpDate *@
+    @* ADMIN - upcoming bookings filtered by Booking.PickUpDate *@
 
-    <h4>Upcoming bookings</h4>
-    <hr />
+    @if (ListType == "future")
+    {
+        <h4>Upcoming bookings</h4>
 
-    <QuickGrid Class="table" Items="AllBookings"
-               Sortable="true"
-               @ref="grid">
-        <PropertyColumn Property="booking => booking.User.Email" Sortable="true" />
-        <PropertyColumn Property="booking => booking.Car.CarModel" Sortable="true" />
-        <PropertyColumn Property="booking => booking.PickUpDate" Sortable="true" />
-        <PropertyColumn Property="booking => booking.ReturnDate" Sortable="true" />
-        <PropertyColumn Property="booking => booking.TotalSum" Sortable="true" />
+        <EditForm Model="DateFilter">
+            <div class="row">
+                <label>
+                    Pickup date
+                    <InputDate @bind-Value="DateFilter.FilterStartDate" />
+                </label>
+            </div>
+            <div class="row">
+                <label>
+                    Return date
+                    <InputDate @bind-Value="DateFilter.FilterEndDate" />
+                </label>
+            </div>
+        </EditForm>
 
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+        <hr />
 
+        <QuickGrid Class="table" Items="AllBookings!.Where(x => (x.PickUpDate >= DateFilter.FilterStartDate) &&
+                                                                (x.ReturnDate <= DateFilter.FilterEndDate) &&
+                                                                (x.PickUpDate >= Today))">
 
-    @* historical bookings *@
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.FirstName" Title="Firstname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.LastName" Title="Lastname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarId" Title="Car ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true"
+                            IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Ascending" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
 
-    <h4>Historical bookings</h4>
-    <hr />
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+                <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
+    }
 
-    <QuickGrid Class="table" Items="AllBookings.Where(x => x.PickUpDate > Today)">
-        <PropertyColumn Property="booking => booking.BookingId" />
-        <PropertyColumn Property="booking => booking.Car!.CarId" />
-        <PropertyColumn Property="booking => booking.PickUpDate" />
-        <PropertyColumn Property="booking => booking.ReturnDate" />
-        <PropertyColumn Property="booking => booking.TotalSum" />
+    @* ADMIN - historical bookings *@
 
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+    @if (ListType == "past")
+    {
+        <h4>Historical bookings</h4>
+        <hr />
 
+        <QuickGrid Class="table" Items="AllBookings!.Where(x => x.PickUpDate < Today)">
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.FirstName" Title="Firstname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.User!.LastName" Title="Lastname" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarId" Title="Car ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
+
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+                <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
+    }
 
 
 </AuthorizeView>
 
 
-@* logged in customer bookings *@
+@* Logged in customer bookings *@
+
 <AuthorizeView Roles="Customer">
 
-    @* currently active bookings *@
+    @* CUSTOMER - currently active bookings *@
 
-    <h4>Active bookings</h4>
-    <hr />
+    @if (ListType == "all")
+    {
+        <h4>Active bookings</h4>
+        <hr />
 
-    <QuickGrid Class="table" Items="AllBookingsByUser.Where(x => x.PickUpDate <= Today && x.ReturnDate >= Today)">
-        <PropertyColumn Property="booking => booking.BookingId" />
-        <PropertyColumn Property="booking => booking.Car!.Brand" />
-        <PropertyColumn Property="booking => booking.Car!.CarModel" />
-        <PropertyColumn Property="booking => booking.PickUpDate" />
-        <PropertyColumn Property="booking => booking.ReturnDate" />
-        <PropertyColumn Property="booking => booking.TotalSum" />
+        <QuickGrid Class="table" Items="AllBookingsByUser!.Where(x => x.PickUpDate <= Today && x.ReturnDate >= Today)">
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
 
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-        </TemplateColumn>
-    </QuickGrid>
-
-
-    @* upcoming bookings *@
-
-    <h4>Upcoming bookings</h4>
-    <hr />
-
-    <QuickGrid Class="table" Items="AllBookingsByUser.Where(x => x.PickUpDate > Today)">
-        <PropertyColumn Property="booking => booking.BookingId" />
-        <PropertyColumn Property="booking => booking.Car!.Brand" />
-        <PropertyColumn Property="booking => booking.Car!.CarModel" />
-        <PropertyColumn Property="booking => booking.PickUpDate" />
-        <PropertyColumn Property="booking => booking.ReturnDate" />
-        <PropertyColumn Property="booking => booking.TotalSum" />
-
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-            <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            </TemplateColumn>
+        </QuickGrid>
 
 
-    @* historical bookings *@
+        @* CUSTOMER - upcoming bookings *@
 
-    <h4>Historical bookings</h4>
-    <hr />
+        <h4>Upcoming bookings</h4>
+        <hr />
 
-    <QuickGrid Class="table" Items="AllBookingsByUser.Where(x => x.ReturnDate < Today)">
-        <PropertyColumn Property="booking => booking.BookingId" />
-        <PropertyColumn Property="booking => booking.Car!.Brand" />
-        <PropertyColumn Property="booking => booking.Car!.CarModel" />
-        <PropertyColumn Property="booking => booking.PickUpDate" />
-        <PropertyColumn Property="booking => booking.ReturnDate" />
-        <PropertyColumn Property="booking => booking.TotalSum" />
+        <QuickGrid Class="table" Items="AllBookingsByUser!.Where(x => x.PickUpDate > Today)">
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
 
-        <TemplateColumn Context="booking">
-            <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
-        </TemplateColumn>
-    </QuickGrid>
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+                <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
 
+
+        @* CUSTOMER - historical bookings *@
+
+        <h4>Historical bookings</h4>
+        <hr />
+
+        <QuickGrid Class="table" Items="AllBookingsByUser!.Where(x => x.ReturnDate < Today)">
+            <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
+            <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
+            <PropertyColumn Property="booking => booking.PickUpDate" Title="Pickup date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.ReturnDate" Title="Return date" Format="yyy-MM-dd" Sortable="true" />
+            <PropertyColumn Property="booking => booking.TotalSum" Title="Total cost" Sortable="true" />
+
+            <TemplateColumn Context="booking">
+                <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
+            </TemplateColumn>
+        </QuickGrid>
+    }
 
 
 </AuthorizeView>
 
 
 @code {
-    [CascadingParameter]
-    public HttpContext HttpContext { get; set; } = default!;
+
+    [Parameter]
+    public string ListType { get; set; }
+
+    [SupplyParameterFromForm]
+    public DateFilter DateFilter { get; set; } = new DateFilter();
+
+    public DateTime Today { get; set; } = DateTime.Now.Date;
 
     public IQueryable<Booking>? AllBookings { get; set; }
 
     public IQueryable<Booking>? AllBookingsByUser { get; set; }
 
-    QuickGrid<Booking>? grid;
-
     public int UserId { get; set; }
 
     public string? Role { get; set; }
 
-    public DateTime Today { get; set; } = DateTime.Now.Date;
 
 
     protected override void OnInitialized()
     {
-            Role = authService.GetUserRoleAsync().Result;
-            UserId = authService.GetUserIdAsync().Result;
+        Role = authService.GetUserRoleAsync().Result;
+        UserId = authService.GetUserIdAsync().Result;
 
-            if (Role == "Admin" && AllBookings == null)
-            {
-                AllBookings = bookingRepository.GetAllBookings().AsQueryable();
-            }
+        if (Role == "Admin" && AllBookings == null)
+        {
+            AllBookings = bookingRepository.GetAllBookings().AsQueryable();
+        }
 
-            if (Role == "Customer" && AllBookingsByUser == null)
-            {
-                AllBookingsByUser = bookingRepository.GetAllBookingsByUser(UserId).AsQueryable();
-            }
-
+        if (Role == "Customer" && AllBookingsByUser == null)
+        {
+            AllBookingsByUser = bookingRepository.GetAllBookingsByUser(UserId).AsQueryable();
+        }
     }
-
-
 }
