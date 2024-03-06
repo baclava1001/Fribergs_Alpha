@@ -1,8 +1,4 @@
 ﻿@page "/bookings/create"
-@using Fribergs_Alpha.Models
-@using Fribergs_Alpha.Data
-@using Fribergs_Alpha.Services
-@using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
@@ -14,14 +10,15 @@
 <PageTitle>Book car</PageTitle>
 
 <h1>Booking</h1>
-
 <h4>@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h4>
-@* TODO: Fix image not rendering *@
-<img class="img-fluid" scr="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" />
+<div>
+    @* TODO: Fix image not rendering *@
+    <img scr="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" class="img-fluid" />
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" EditContext="_editContext" OnValidSubmit="AddBooking" FormName="create" Enhance>
+        <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <input type="hidden" name="carid" value="carid" />
@@ -43,40 +40,41 @@
             </div>        
             <div class="mb-3">
                 <label for="returndate" class="form-label">ReturnDate:</label> 
-                <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" />
-                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
+                <InputDate id="pickupdate" @bind-Value="Booking.ReturnDate" class="form-control" />
+                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
             </div>
             <div class="mb-3">
                 <label for="totalsum" class="form-label">TotalSum:</label>
-                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" @bind-Value:after="UpdateTotalSum" class="form-control" />
+                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
                 <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
+<AuthorizeView Policy="AdminRoleRequired">
+    <Authorized>
+        <div>
+            <a href="/bookings">Back to List</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
-<div>
-    <a href="/bookings">Back to List</a>
-</div>
 
 @code {
         [SupplyParameterFromForm]
         public Booking Booking { get; set; } = new();
+        
         // Get CarId from previous page
         [SupplyParameterFromQuery]
         public int CarId { get; set; }
-    public int _userId;
 
-    // EditContext is passed to the html-element EditForm, instead of Model
-    EditContext _editContext;
-
-    ValidationMessageStore modelState;
+        // Field variable to store user id
+        private int _userId;
 
     protected override void OnInitialized()
     {
-        _editContext = new EditContext(Booking);
-
+        // Retrieve car
         if (CarExists(CarId))
         {
             Booking.Car = carRepository.GetCarById(CarId);
@@ -86,7 +84,7 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-        // Get user id, then user
+        // Store user id, then retrieve user
         _userId = authService.GetUserIdAsync().Result;
         Booking.User = userRepository.GetUserById(_userId);
 
@@ -96,18 +94,6 @@
     bool CarExists(int carid)
     {
         return carRepository.GetAllCars().Any(e => e.CarId == carid);
-    }
-
-    public void UpdateTotalSum()
-    {
-        if (Booking.ReturnDate > Booking.PickUpDate)
-        {
-            // Clear the state for the TotalSum property
-            modelState.Clear(_editContext.Field(nameof(Booking.TotalSum)));
-            double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
-            Booking.TotalSum = Booking.Car.PricePerDay * days;
-            _editContext.NotifyValidationStateChanged();
-        }
     }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD

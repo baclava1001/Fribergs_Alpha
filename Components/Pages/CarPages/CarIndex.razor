@@ -1,9 +1,6 @@
 ﻿@page "/cars"
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
-@using Fribergs_Alpha.Models
-@using Fribergs_Alpha.Data
 @inject ICar carRepository
 @inject ICarCategory carCategoryRepository
 @rendermode @(new InteractiveServerRenderMode(prerender: false))

@@ -1,6 +1,5 @@
 ﻿@page "/customer"
 @using Fribergs_Alpha.Services
-@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize (Policy = "CustomerRoleRequired")]
 @inject UserAuthService authService
 

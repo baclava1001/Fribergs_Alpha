@@ -27,8 +27,6 @@ namespace Fribergs_Alpha.Models
             ReturnDate = DateTime.Now;
             Car = new Car();
             User = new User();
-            //PickUpDate = DateOnly.FromDateTime(DateTime.Now);
-            //ReturnDate = DateOnly.FromDateTime(DateTime.Now);
         }
     }
 }
