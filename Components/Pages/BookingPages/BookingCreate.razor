@@ -45,8 +45,8 @@
             </div>
             <div class="mb-3">
                 <label for="totalsum" class="form-label">TotalSum:</label>
-                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
-                <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
+                <input type="number" disabled id="totalsumtemp" @bind="_TotalSumTemp" class="form-control" />
+                <ValidationMessage For="() => _totalSumTemp" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
@@ -62,15 +62,17 @@
 
 
 @code {
-        [SupplyParameterFromForm]
-        public Booking Booking { get; set; } = new();
-        
-        // Get CarId from previous page
-        [SupplyParameterFromQuery]
-        public int CarId { get; set; }
+    [SupplyParameterFromForm]
+    public Booking Booking { get; set; } = new();
 
-        // Field variable to store user id
-        private int _userId;
+    // Get CarId from previous page
+    [SupplyParameterFromQuery]
+    public int CarId { get; set; }
+
+    // Field variable to store user id
+    private int _userId;
+    // Field variable to store totalSum onchange
+    private double _totalSumTemp;
 
     protected override void OnInitialized()
     {
@@ -99,7 +101,29 @@
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public void AddBooking()
     {
+        Booking.TotalSum = _totalSumTemp;
         bookingRepository.AddBooking(Booking);
         NavigationManager.NavigateTo("/bookings");
+    }
+
+    public double _TotalSumTemp
+    {
+        get
+        {
+            return _totalSumTemp;
+        }
+        set
+        {
+            double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+            if (days > 0)
+            {
+                value = days * Booking.Car.PricePerDay;
+                _totalSumTemp = value;
+            }
+            else
+            {
+                _totalSumTemp = 0;
+            }
+        }
     }
 }
