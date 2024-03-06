@@ -1,34 +1,37 @@
 ﻿@page "/bookings/create"
-@using Fribergs_Alpha.Models
-@using Fribergs_Alpha.Data
-@using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
 @inject Fribergs_Alpha.Data.IUserRepository userRepository
 @inject NavigationManager NavigationManager
+@inject UserAuthService authService
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Book car</PageTitle>
 
 <h1>Booking</h1>
-
-<h4>@Booking.Car.Brand @Booking.Car.CarModel @Booking.Car.Year (@Booking.Car.Color)</h4>
-<img class="" scr="@Booking.Car.CarPicUrl" />
+<h4>@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h4>
+<div>
+    @* TODO: Fix image not rendering *@
+    <img scr="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" class="img-fluid" />
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            @* TODO: Add input for User and Car *@
             <input type="hidden" name="carid" value="carid" />
-            <div class="mb-3">
-                <label for="firstname" class="form-label">Name:</label>
-                <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
-                <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
-                <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
-                <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+            <div class="col-8"
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">Name:</label>
+                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
+                 </div>
+                <div class="mb-3">
+                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+                </div>
             </div>
             <div class="mb-3">
                 <label for="pickupdate" class="form-label">PickUpDate:</label> 
@@ -37,34 +40,41 @@
             </div>        
             <div class="mb-3">
                 <label for="returndate" class="form-label">ReturnDate:</label> 
-                <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
+                <InputDate id="pickupdate" @bind-Value="Booking.ReturnDate" class="form-control" />
                 <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="totalsum" class="form-label">TotalSum:</label> 
-                <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
+                <label for="totalsum" class="form-label">TotalSum:</label>
+                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
                 <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>        
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
+<AuthorizeView Policy="AdminRoleRequired">
+    <Authorized>
+        <div>
+            <a href="/bookings">Back to List</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
-<div>
-    <a href="/bookings">Back to List</a>
-</div>
 
 @code {
+        [SupplyParameterFromForm]
+        public Booking Booking { get; set; } = new();
+        
+        // Get CarId from previous page
+        [SupplyParameterFromQuery]
+        public int CarId { get; set; }
 
-    [SupplyParameterFromForm]
-    public Booking Booking { get; set; } = new();
-
-    // Get CarId from previous page
-    [SupplyParameterFromQuery]
-    public int CarId { get; set; }
+        // Field variable to store user id
+        private int _userId;
 
     protected override void OnInitialized()
     {
+        // Retrieve car
         if (CarExists(CarId))
         {
             Booking.Car = carRepository.GetCarById(CarId);
@@ -74,11 +84,16 @@
             NavigationManager.NavigateTo("notfound");
         }
 
-        int userId = 1;
-        // TODO: Get user
-        Booking.User = userRepository.GetUserById(userId);
-        //_userId = Int32.Parse(httpContext.User.FindFirstValue(ClaimTypes.UserData));
-        // _user = userRepository.GetUserById(userId);
+        // Store user id, then retrieve user
+        _userId = authService.GetUserIdAsync().Result;
+        Booking.User = userRepository.GetUserById(_userId);
+
+        Booking.TotalSum = 0;
+    }
+
+    bool CarExists(int carid)
+    {
+        return carRepository.GetAllCars().Any(e => e.CarId == carid);
     }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -86,10 +101,5 @@
     {
         bookingRepository.AddBooking(Booking);
         NavigationManager.NavigateTo("/bookings");
-    }
-
-    bool CarExists(int carid)
-    {
-        return carRepository.GetAllCars().Any(e => e.CarId == carid);
     }
 }

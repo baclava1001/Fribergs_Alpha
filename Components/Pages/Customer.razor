@@ -1,4 +1,5 @@
 ﻿@page "/customer"
+@using Fribergs_Alpha.Services
 @attribute [Authorize (Policy = "CustomerRoleRequired")]
 @inject UserAuthService authService
 
