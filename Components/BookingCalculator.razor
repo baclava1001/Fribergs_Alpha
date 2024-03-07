@@ -1,0 +1,52 @@
+﻿@*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
+
+<div class="mb-3">
+    <label for="pickupdate" class="form-label">PickUpDate:</label>
+    <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
+    <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
+</div>
+<div class="mb-3">
+    <label for="returndate" class="form-label">ReturnDate:</label>
+    <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
+    <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
+</div>
+<div class="mb-3">
+    <label for="totalsum" class="form-label">TotalSum:</label>
+    <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
+    <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
+</div>
+
+
+@code {
+
+    [Parameter]
+    public Booking Booking { get; set; } = new();
+
+    private void UpdateTotalSumOnPickup(ChangeEventArgs e)
+    {
+        Booking.PickUpDate = DateTime.Parse(e.Value.ToString());
+        double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+        if (days > 0)
+        {
+            Booking.TotalSum = days * Booking.Car.PricePerDay;
+        }
+        else
+        {
+            Booking.TotalSum = 0;
+        }
+    }
+
+    private void UpdateTotalSumOnReturn(ChangeEventArgs e)
+    {
+        Booking.ReturnDate = DateTime.Parse(e.Value.ToString());
+        double days = (Booking.ReturnDate - Booking.PickUpDate).Days;
+        if (days > 0)
+        {
+            Booking.TotalSum = days * Booking.Car.PricePerDay;
+        }
+        else
+        {
+            Booking.TotalSum = 0;
+        }
+    }
+}

@@ -32,21 +32,8 @@
                     <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="pickupdate" class="form-label">PickUpDate:</label> 
-                <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
-                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
-            </div>        
-            <div class="mb-3">
-                <label for="returndate" class="form-label">ReturnDate:</label> 
-                <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
-                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="totalsum" class="form-label">TotalSum:</label>
-                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
-                <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>
+            @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
+                <BookingCalculator Booking="@Booking"></BookingCalculator>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -61,13 +48,12 @@
 
 
 @code {
-
-    [SupplyParameterFromForm]
-    public Booking Booking { get; set; } = new();
-
     // Get CarId from previous page
     [SupplyParameterFromQuery]
     public int CarId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Booking Booking { get; set; } = new();
 
     // Field variable to store user id
     private int _userId;
@@ -90,8 +76,6 @@
         Booking.User = userRepository.GetUserById(_userId);
 
         Booking.TotalSum = 0;
-        // Booking.PickUpDate = DateTime.Now;
-        // Booking.ReturnDate = DateTime.Now;
     }
 
     bool CarExists(int carid)
