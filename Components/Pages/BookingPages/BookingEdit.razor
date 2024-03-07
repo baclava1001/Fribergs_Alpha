@@ -56,11 +56,8 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateBooking()
     {
-        // DB.Attach(Booking!).State = EntityState.Modified;
-
         try
         {
-            /* await DB.SaveChangesAsync(); */
             bookingRepository.UpdateBooking(Booking);
         }
         catch (DbUpdateConcurrencyException)
@@ -75,7 +72,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/bookings");
+        NavigationManager.NavigateTo("/bookings/all");
     }
 
     bool BookingExists(int bookingid)

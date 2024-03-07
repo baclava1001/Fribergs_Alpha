@@ -3,6 +3,7 @@
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Policy = "AdminRoleRequired")]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Create</PageTitle>

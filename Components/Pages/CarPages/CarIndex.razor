@@ -11,9 +11,13 @@
 
 <h1>Our Cars</h1>
 
-<p>
-    <a href="cars/create">Create New</a>
-</p>
+<AuthorizeView Policy="AdminRoleRequired">
+    <Authorized>
+        <p>
+            <a href="cars/create">Create New</a>
+        </p>
+    </Authorized>
+</AuthorizeView>
 
 <QuickGrid Class="table" Items="Cars">
     <PropertyColumn Property="car => car.Category.Category" Title="Category" />
