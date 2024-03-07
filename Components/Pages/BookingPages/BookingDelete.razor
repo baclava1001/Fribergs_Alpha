@@ -30,7 +30,7 @@
         </dl>
         <EditForm method="post" Model="booking" OnValidSubmit="DeleteBooking" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(booking is null)">Delete</button> |
-            <a href="/bookings">Back to List</a>
+            <a href="/bookings/all">Back to List</a>
         </EditForm>
     }
 </div>

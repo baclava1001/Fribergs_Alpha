@@ -1,14 +1,15 @@
 ﻿@page "/Bookings/edit"
-@inject Fribergs_Alpha.Data.IBooking bookingRepository
-@using Fribergs_Alpha.Models
-@inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@using Fribergs_Alpha.Components
+@inject Fribergs_Alpha.Data.IBooking bookingRepository
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Edit</PageTitle>
 
 <h1>Edit</h1>
 
-<h4>Booking</h4>
+<h4>Booking @Booking.BookingId</h4>
 <hr />
 @if (Booking is null)
 {
@@ -22,21 +23,8 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <input type="hidden" name="Booking.BookingId" value="@Booking.BookingId" />
-                <div class="mb-3">
-                    <label for="pickupdate" class="form-label">PickUpDate:</label>
-                    <InputDate id="pickupdate" @bind-Value="Booking.PickUpDate" class="form-control" />
-                    <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="returndate" class="form-label">ReturnDate:</label>
-                    <InputDate id="returndate" @bind-Value="Booking.ReturnDate" class="form-control" />
-                    <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="totalsum" class="form-label">TotalSum:</label>
-                    <InputNumber id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
-                    <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-                </div>
+                @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
+                <BookingCalculator Booking="@Booking"></BookingCalculator>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
@@ -44,7 +32,7 @@ else
 }
 
 <div>
-    <a href="/bookings">Back to List</a>
+    <a href="/bookings/all">Back to List</a>
 </div>
 
 @code {
@@ -54,7 +42,7 @@ else
     [SupplyParameterFromForm]
     public Booking? Booking { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Booking ??= bookingRepository.GetBookingById(BookingId);
 
