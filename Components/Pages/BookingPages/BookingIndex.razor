@@ -190,7 +190,7 @@
     public string ListType { get; set; }
 
     [SupplyParameterFromForm]
-    public DateFilter DateFilter { get; set; } = new DateFilter();
+    public DateCategoryFilter DateFilter { get; set; } = new DateCategoryFilter();
 
     public DateTime Today { get; set; } = DateTime.Now.Date;
 
