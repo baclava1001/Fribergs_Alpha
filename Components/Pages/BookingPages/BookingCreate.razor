@@ -9,45 +9,34 @@
 
 <PageTitle>Book car</PageTitle>
 
-<h1>Booking</h1>
-<h4>@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h4>
-<hr />
+<h3>Create booking for @Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h3><hr /><br />
+<div>
+    <img src="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" style="width: 300px; height: auto;" />
+</div><br /><br />
+
 <div class="row">
+  
     <div class="col-md-4">
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            <input type="hidden" name="carid" value="carid" />
-            <div>
-                <img src="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" class="img-fluid" />
-            </div>
-            <div class="col-8"
-                <div class="mb-3">
-                    <label for="firstname" class="form-label">Name:</label>
-                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
-                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
-                 </div>
-                <div class="mb-3">
-                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
-                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
-                </div>
-            </div>
+            <input type="hidden" name="carid" value="carid" />    
             <div class="mb-3">
-                <label for="pickupdate" class="form-label">PickUpDate:</label> 
+                <label for="pickupdate" class="form-label">Pickup Date:</label> 
                 <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
                 <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
             </div>        
             <div class="mb-3">
-                <label for="returndate" class="form-label">ReturnDate:</label> 
+                <label for="returndate" class="form-label">Return Date:</label> 
                 <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
                 <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="totalsum" class="form-label">TotalSum:</label>
+                <label for="totalsum" class="form-label">Total cost:</label>
                 <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
                 <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+            </div>                   
+            <button type="submit" class="btn btn-primary">Book Now</button>
         </EditForm>
     </div>
 </div>
@@ -74,7 +63,8 @@
 
 
     protected override void OnInitialized()
-    {
+    {      
+
         // Retrieve car
         if (CarExists(CarId))
         {
