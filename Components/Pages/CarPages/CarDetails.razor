@@ -12,7 +12,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>@car.Brand @car.CarModel @car.Year</h4>
+    <h4>@car.Brand @car.CarModel (@car.Year)</h4>
     <hr />
     @if (car is null)
     {
@@ -20,7 +20,7 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">CarCategory</dt>
+            <dt class="col-sm-2">Category</dt>
             <dt class="col-sm-10">@car.Category.Category</dt>
             <dt class="col-sm-2">Brand</dt>
             <dd class="col-sm-10">@car.Brand</dd>
@@ -34,7 +34,7 @@
             <dd class="col-sm-10">@car.Description</dd>
             <dt class="col-sm-2">Price Per Day</dt>
             <dd class="col-sm-10">@car.PricePerDay</dd>
-            <dt class="col-sm-2">Picture</dt>
+            @* <dt class="col-sm-2">Picture</dt> *@
             <dd class="col-sm-10"><img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" /></dd>
         </dl>
         <div>

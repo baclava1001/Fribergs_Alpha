@@ -26,7 +26,10 @@
             <dd class="col-sm-10">@booking.TotalSum</dd>
         </dl>
         <div>
-            <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
+            @if (booking.PickUpDate > DateTime.Now)
+            {
+                <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit |</a>
+            }
             <a href="@($"/bookings/all")">Back to List</a>
         </div>
     }
