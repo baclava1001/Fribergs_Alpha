@@ -17,30 +17,44 @@
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="cars">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Cars
+            <NavLink class="nav-link" href="book">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Book
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="carcategories">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> CarCategories
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Admin
-            </NavLink>
-        </div>
-        
+
+        <AuthorizeView Roles="Admin">
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Admin
+                </NavLink>
+            </div>
+
+        </AuthorizeView>
+
+
+        <AuthorizeView Roles="Customer">
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="customer">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Customer
+                </NavLink>
+            </div>
+
+        </AuthorizeView>
+
+
         <AuthorizeView>
+
             <NotAuthorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
             </NotAuthorized>
+
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="logout">
@@ -48,7 +62,7 @@
                     </NavLink>
                 </div>
             </Authorized>
+
         </AuthorizeView>
     </nav>
 </div>
-
