@@ -44,7 +44,7 @@
                     </InputSelect>
                 </label>
 
-                <button type="submit" class="btn btn-primary"> Find </button>
+                <button type="submit" class="btn btn-primary">Find</button>
 
             </EditForm>
         </div>
@@ -71,15 +71,15 @@
                 {
                     @:</div><div class="row mt-3">
                 }
-                <div class="col-3">
+                <div class="col">
 
-                    <div class="card bg-light mb-3" style="width:auto">
+                    <div class="card bg-light mb-3" style="width:280px">
 
                         <div class="card-header">
                             <h4>@FilteredCars[i].Brand @FilteredCars[i].CarModel</h4>
                         </div>
 
-                        <img class="card-img-top" alt="@FilteredCars[i].CarModel" src="@FilteredCars[i].CarPicUrl" height="150" width="auto" />
+                        <img class="card-img-top img-fluid" alt="@FilteredCars[i].CarModel" src="@FilteredCars[i].CarPicUrl" height="160" />
 
                         <div class="card-body">
                             <p>Daily cost: @FilteredCars[i].PricePerDay SEK</p>
@@ -90,7 +90,7 @@
                                     <a class="btn btn-primary" href="@($"/bookings/create/{FilteredCars[i].CarId}")">Book</a>
                                 </div>
                                 <div class="col-md-auto">
-                                    <a class="btn btn-secondary" href="@($"/cars/details/{FilteredCars[i].CarId}")">Details</a>
+                                    <a class="btn btn-secondary" href="@($"/cars/details/?carid={FilteredCars[i].CarId}")">Details</a>
                                 </div>
                             </div>
                         </div>
