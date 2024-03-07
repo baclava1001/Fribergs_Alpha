@@ -18,9 +18,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <input type="hidden" name="carid" value="carid" />
-            <div>
-                <img src="@Booking.Car.CarPicUrl" alt="Picture of @Booking.Car.Brand @Booking.Car.CarModel" title="@Booking.Car.Brand @Booking.Car.CarModel" class="img-fluid" />
-            </div>
             <div class="col-8"
                 <div class="mb-3">
                     <label for="firstname" class="form-label">Name:</label>
@@ -33,7 +30,7 @@
                 </div>
             </div>
             @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
-                <BookingCalculator Booking="@Booking"></BookingCalculator>
+            <BookingCalculator Booking="@Booking"></BookingCalculator>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
