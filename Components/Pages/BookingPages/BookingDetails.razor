@@ -3,6 +3,7 @@
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
 
 <PageTitle>Details</PageTitle>
 
@@ -15,18 +16,26 @@
     {
         <p><em>Loading...</em></p>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">PickUpDate</dt>
+    else
+    {
+        <dl>
+            <img src="@booking.Car.CarPicUrl" alt="" class="img-thumbnail" />
+            <dd class="col-sm-2">@booking.Car.Brand @booking.Car.CarModel (@booking.Car.Year)</dd>
+            <dt class="col-sm-2">Booked by:</dt>
+            <dd class="col-sm-10">@booking.User.FirstName @booking.User.LastName</dd>
+            <dt class="col-sm-2">Pickup Date:</dt>
             <dd class="col-sm-10">@booking.PickUpDate</dd>
-            <dt class="col-sm-2">ReturnDate</dt>
+            <dt class="col-sm-2">Return Date:</dt>
             <dd class="col-sm-10">@booking.ReturnDate</dd>
-            <dt class="col-sm-2">TotalSum</dt>
+            <dt class="col-sm-2">Total sum:</dt>
             <dd class="col-sm-10">@booking.TotalSum</dd>
         </dl>
         <div>
-            <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
-            <a href="@($"/bookings")">Back to List</a>
+            @if (booking.PickUpDate > DateTime.Now)
+            {
+                <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit |</a>
+            }
+            <a href="@($"/bookings/all")">Back to List</a>
         </div>
     }
 </div>

@@ -3,6 +3,7 @@
 @using Fribergs_Alpha.Data
 @inject ICarCategory carCategoryRepository
 @using Fribergs_Alpha.Models
+@attribute [Authorize(Policy = "AdminRoleRequired")]
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Index</PageTitle>

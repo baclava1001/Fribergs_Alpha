@@ -1,13 +1,11 @@
-﻿@page "/bookings/{listtype}"
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@page "/bookings/{listtype}"
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject UserAuthService authService
 @rendermode InteractiveServer
 @attribute [Authorize]
 
 <PageTitle>Bookings</PageTitle>
-
-
-
 
 
 @* ADMIN/View all bookings *@
