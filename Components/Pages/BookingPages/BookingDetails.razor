@@ -3,6 +3,7 @@
 @using Fribergs_Alpha.Models
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
 
 <PageTitle>Details</PageTitle>
 
@@ -29,7 +30,8 @@
             <dt class="col-sm-2">Total sum:</dt>
             <dd class="col-sm-10">@booking.TotalSum</dd>
         </dl>
-        <div>    
+        <div>
+            <a href="@($"/bookings/edit?bookingid={booking.BookingId}")">Edit</a> |
             <a href="@($"/bookings/all")">Back to List</a>
         </div>
     }

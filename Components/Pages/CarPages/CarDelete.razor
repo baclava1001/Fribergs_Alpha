@@ -13,6 +13,9 @@
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>@car.Brand @car.CarModel @car.Year</h4>
+    <div>
+        <img src="@car.CarPicUrl" alt="Picture of @car.Brand @car.CarModel" title="@car.Brand @car.CarModel" class="img-fluid" />
+    </div>
     <hr />
     @if (car is null)
     {
