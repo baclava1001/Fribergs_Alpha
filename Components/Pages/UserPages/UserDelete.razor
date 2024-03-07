@@ -1,4 +1,4 @@
-﻿@page "/users/delete"
+﻿@page "/user/delete"
 @inject IUserRepository UserRepository
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
@@ -8,11 +8,9 @@
 
 <PageTitle>Delete</PageTitle>
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>Delete user account?</h3>
 <div>
-    <h4>User</h4>
+    <h4>ID: @user.UserId Name: @user.FirstName @user.LastName</h4>
     <hr />
     @if (user is null)
     {
@@ -49,7 +47,16 @@
         </dl>
         <EditForm method="post" Model="user" OnValidSubmit="DeleteUser" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(user is null)">Delete</button> |
-            <a href="/users">Back to List</a>
+            <AuthorizeView Policy="CustomerRoleRequired">
+                <Authorized Context="authContext">
+                    <a href="/customer">Back</a> |
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Policy="AdminRoleRequired">
+                <Authorized Context="authContext">
+                    <a href="userpages/users/">Back to List</a>
+                </Authorized>
+            </AuthorizeView>
         </EditForm>
     }
 </div>
@@ -75,10 +82,7 @@
         if (user != null)
         {
             UserRepository.DeleteUser(UserId!);
-            NavigationManager.NavigateTo("/userpages/users/Customer");
-        }
-        // DB.Users.Remove(user!);
-        // await DB.SaveChangesAsync();
-        
+            NavigationManager.NavigateTo("/logout");
+        }        
     }
 }

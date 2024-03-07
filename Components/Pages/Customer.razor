@@ -2,6 +2,7 @@
 @using Fribergs_Alpha.Services
 @attribute [Authorize (Policy = "CustomerRoleRequired")]
 @inject UserAuthService authService
+@rendermode InteractiveServer
 
 <h3>Customer</h3>
 
@@ -10,7 +11,9 @@
 @* Test av GetUserIdAsync *@
 <span>Logged in with user ID: @UserId</span> 
 
-<NavLink class="nav-link" href="/bookings/all">List all bookings</NavLink>
+<NavLink class="nav-link" href="bookings/all">List all bookings</NavLink>
+<NavLink class="nav-link" href="@($"user/edit?userid={UserId}")">View and edit personal details</NavLink>
+<NavLink class="nav-link" href="@($"user/delete?userid={UserId}")" style="color:darkred">Remove account</NavLink>
 
 @code {
 
@@ -19,8 +22,5 @@
     protected override void OnInitialized()
     {
         UserId = authService.GetUserIdAsync().Result;
-
-
-
     }
 }
