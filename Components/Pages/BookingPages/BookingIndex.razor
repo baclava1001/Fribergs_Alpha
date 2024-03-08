@@ -138,7 +138,7 @@
                 <a href="@($"bookings/details?bookingid={booking.BookingId}")">Details</a> |
             </TemplateColumn>
         </QuickGrid>
-
+        <br /><br />
 
         @* CUSTOMER - upcoming bookings *@
 
@@ -159,14 +159,14 @@
                 <a href="@($"bookings/delete?bookingid={booking.BookingId}")">Delete</a>
             </TemplateColumn>
         </QuickGrid>
-
+         <br /><br />
 
         @* CUSTOMER - historical bookings *@
 
         <h4>Historical bookings</h4>
         <hr />
 
-        <QuickGrid Class="table" Items="AllBookingsByUser!.Where(x => x.ReturnDate < Today)">
+        <QuickGrid Class="table" Items="AllBookingsByUser!.Where(x => x.ReturnDate < Today)" style="table-layout: fixed;">
             <PropertyColumn Property="booking => booking.BookingId" Title="Booking ID" Sortable="true" />
             <PropertyColumn Property="booking => booking.Car!.Brand" Title="Brand" Sortable="true" />
             <PropertyColumn Property="booking => booking.Car!.CarModel" Title="Model" Sortable="true" />
