@@ -8,19 +8,18 @@
 <h1>Delete Booking</h1>
 <div>
     <hr />
-    
+    <h3>Are you sure you want to delete this?</h3><br />
+
     @if (booking is null)
     {
         <p><em>Loading...</em></p>
     }
-    else {
+    else
+    {
 
         <img src="@booking.Car.CarPicUrl" alt="Picture of car" class="img-thumbnail" style="width: 350px; height: auto;" />
 
         <br />
-
-        <h3>Are you sure you want to delete this?</h3>
-
         <br />
         <dl>
             <dt class="col-sm-2">Car:</dt>
