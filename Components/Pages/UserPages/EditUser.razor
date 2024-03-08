@@ -72,20 +72,18 @@
             </AuthorizeView>
             <button type="submit" class="btn btn-primary">Save</button> |
             <AuthorizeView Policy="CustomerRoleRequired">
-                <Authorized Context="authContext">
+                <Authorized Context="customer">
                     <a href="/customer">Back</a> |
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Policy="AdminRoleRequired">
+                <Authorized Context="admin">
+                        <a href="/admin">Cancel</a>
                 </Authorized>
             </AuthorizeView>
         </EditForm>
     </div>
 </div>
-<AuthorizeView Policy="AdminRoleRequired">
-    <Authorized>
-        <div>
-            <a href="/userpages/users">Back to List</a>
-        </div>
-    </Authorized>
-</AuthorizeView>
 
 
 @code {
