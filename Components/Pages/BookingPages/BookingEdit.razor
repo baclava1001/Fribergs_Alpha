@@ -7,9 +7,7 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h4>Booking @Booking.BookingId</h4>
+<h1>Edit Booking</h1>
 <hr />
 @if (Booking is null)
 {
@@ -17,6 +15,17 @@
 }
 else
 {
+    <img src="@Booking.Car.CarPicUrl" alt="Picture of car" class="img-thumbnail" style="width: 350px; height: auto;" />
+    <br />
+    <br />
+   
+    <dt class="col-sm-2">Car:</dt>
+    <dd class="col-sm-2">@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</dd>
+    <dt class="col-sm-2">Booked by:</dt>
+    <dd class="col-sm-10">@Booking.User.FirstName @Booking.User.LastName</dd>
+    <dt class="col-sm-2">Booking ID:</dt>
+    <dd class="col-sm-2">@Booking.BookingId</dd>
+  
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="Booking" OnValidSubmit="UpdateBooking" FormName="edit" Enhance>
