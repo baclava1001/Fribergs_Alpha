@@ -23,52 +23,52 @@
         <div class="nav-item px-3">
 
             <NavLink class="nav-link" href="book">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Book
+                <span i class="fa-regular fa-calendar-days" aria-hidden="true" style="margin-right: 14px;"></span> Book
             </NavLink>
         </div>
 
 
         <AuthorizeView Roles="Admin">
 
-    <div class="nav-item px-3">
-        <NavLink class="nav-link" href="admin">
-            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Admin
-        </NavLink>
-    </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <span i class="fa-solid fa-user-gear" aria-hidden="true" style="margin-right: 14px;"></span> Admin
+                </NavLink>
+            </div>
 
         </AuthorizeView>
 
 
         <AuthorizeView Roles="Customer">
 
-    <div class="nav-item px-3">
-        <NavLink class="nav-link" href="customer">
-            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Customer
-        </NavLink>
-    </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="customer">
+                    <span i class="fa-solid fa-user-gear" aria-hidden="true" style="margin-right: 14px;"></span> Customer
+                </NavLink>
+            </div>
 
         </AuthorizeView>
 
 
         <AuthorizeView>
 
-    <NotAuthorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
-            </NavLink>
-        </div>
-        </NotAuthorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right: 14px;"></span> Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
 
-        <Authorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="logout">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logout
-            </NavLink>
-        </div>
-        </Authorized>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="logout">
+                        <span i class="fa-solid fa-right-to-bracket" aria-hidden="true" style="margin-right: 14px;"></span> Logout
+                    </NavLink>
+                </div>
+            </Authorized>
 
-    </AuthorizeView>
+        </AuthorizeView>
     </nav>
 </div>
 
