@@ -87,7 +87,7 @@
 
                             <div class="row justify-content-start align-items-end">
                                 <div class="col-md-auto">
-                                    <a class="btn btn-primary" href="@($"/bookings/create/{FilteredCars[i].CarId}")">Book</a>
+                                    <a class="btn btn-primary" href="@($"/bookings/create/{FilteredCars[i].CarId}/{FilterData.FilterStartDate.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)}/{FilterData.FilterEndDate.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)}")">Book</a>
                                 </div>
                                 <div class="col-md-auto">
                                     <a class="btn btn-secondary" href="@($"/cars/details/?carid={FilteredCars[i].CarId}")">Details</a>
