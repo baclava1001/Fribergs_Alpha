@@ -70,7 +70,7 @@ namespace Fribergs_Alpha.Components.Pages.BookingPages
         public double TotalCost(double dailyPrice)
         {
             var days = (FilterData.FilterEndDate - FilterData.FilterStartDate).TotalDays;
-            var totalCost = dailyPrice * (days + 1);
+            var totalCost = dailyPrice * days;
 
             return totalCost;
         }
