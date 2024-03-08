@@ -113,8 +113,6 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public void UpdateCar()
     {
-        // carRepository.UpdateCar(Car!).State = EntityState.Modified;
-
         try
         {
             Car.Category.Category = carCategoryRepository.GetCarCategoryById(Car.Category.CarCategoryId).Category;

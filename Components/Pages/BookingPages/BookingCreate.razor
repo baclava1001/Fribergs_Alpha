@@ -1,4 +1,4 @@
-﻿@page "/bookings/create"
+﻿@page "/bookings/create/{carid:int?}/{datefrom?}/{dateto?}"
 @using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
@@ -20,23 +20,23 @@
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            <input type="hidden" name="carid" value="carid" />    
-            <div class="mb-3">
-                <label for="pickupdate" class="form-label">Pickup Date:</label> 
-                <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
-                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
-            </div>        
-            <div class="mb-3">
-                <label for="returndate" class="form-label">Return Date:</label> 
-                <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
-                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
+          
+  <input type="hidden" name="carid" value="carid" />
+            <div class="col-8"
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">Name:</label>
+                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
+                 </div>
+                <div class="mb-3">
+                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="totalsum" class="form-label">Total cost:</label>
-                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
-                <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>                   
-            <button type="submit" class="btn btn-primary">Book Now</button>
+            @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
+            <BookingCalculator Booking="@Booking"></BookingCalculator>
+            <button type="submit" class="btn btn-primary">Create</button>
+
         </EditForm>
     </div>
 </div>
@@ -50,38 +50,64 @@
 
 
 @code {
+    // Get CarId from previous page
+    [Parameter]
+    public int CarId { get; set; }
+
+    // Get CarId from previous page
+    [Parameter]
+    public string? DateFrom { get; set; }
+
+    // Get CarId from previous page
+    [Parameter]
+    public string? DateTo { get; set; }
 
     [SupplyParameterFromForm]
     public Booking Booking { get; set; } = new();
-
-    // Get CarId from previous page
-    [SupplyParameterFromQuery]
-    public int CarId { get; set; }
 
     // Field variable to store user id
     private int _userId;
 
 
-    protected override void OnInitialized()
-    {      
+    // protected override void OnInitialized()
+    // {
+    //     // Retrieve car
+    //     if (CarExists(CarId))
+    //     {
+    //         Booking.Car = carRepository.GetCarById(CarId);
+    //     }
+    //     else
+    //     {
+    //         NavigationManager.NavigateTo("notfound");
+    //     }
 
-        // Retrieve car
-        if (CarExists(CarId))
-        {
-            Booking.Car = carRepository.GetCarById(CarId);
-        }
-        else
-        {
-            NavigationManager.NavigateTo("notfound");
-        }
+    //     // Store user id, then retrieve user
+    //     _userId = authService.GetUserIdAsync().Result;
+    //     Booking.User = userRepository.GetUserById(_userId);
 
-        // Store user id, then retrieve user
+    //     Booking.TotalSum = 0;
+    // }
+
+
+    protected override void OnParametersSet()
+    {
         _userId = authService.GetUserIdAsync().Result;
         Booking.User = userRepository.GetUserById(_userId);
+        Booking.Car = carRepository.GetCarById(CarId);
 
-        Booking.TotalSum = 0;
-        // Booking.PickUpDate = DateTime.Now;
-        // Booking.ReturnDate = DateTime.Now;
+        if (DateFrom != null)
+        {
+            var pickupDate = DateTime.Parse(DateFrom!);
+            var returnDate = DateTime.Parse(DateTo!);
+
+            var days = (returnDate - pickupDate).TotalDays;
+            var totalCost = Booking.Car.PricePerDay * days;
+
+            Booking.PickUpDate = pickupDate;
+            Booking.ReturnDate = returnDate;
+            Booking.Car = carRepository.GetCarById(CarId);
+            Booking.TotalSum = totalCost;
+        }
     }
 
     bool CarExists(int carid)

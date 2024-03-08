@@ -14,7 +14,7 @@
 
     @* ADMIN - currently active bookings *@
 
-    @if (ListType == "present")
+    @if (ListType == "present" || ListType == "all")
     {
         <h4>Active bookings</h4>
         <hr />
@@ -40,7 +40,7 @@
 
     @* ADMIN - upcoming bookings filtered by Booking.PickUpDate *@
 
-    @if (ListType == "future")
+    @if (ListType == "future" || ListType == "all")
     {
         <h4>Upcoming bookings</h4>
 
@@ -86,7 +86,7 @@
 
     @* ADMIN - historical bookings *@
 
-    @if (ListType == "past")
+    @if (ListType == "past" || ListType == "all")
     {
         <h4>Historical bookings</h4>
         <hr />
@@ -190,7 +190,7 @@
     public string ListType { get; set; }
 
     [SupplyParameterFromForm]
-    public DateFilter DateFilter { get; set; } = new DateFilter();
+    public DateCategoryFilter DateFilter { get; set; } = new DateCategoryFilter();
 
     public DateTime Today { get; set; } = DateTime.Now.Date;
 

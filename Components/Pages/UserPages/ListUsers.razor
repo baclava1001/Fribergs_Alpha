@@ -26,8 +26,8 @@
 
 
     <TemplateColumn Context="user" Title="Handle">
-        <a href="@($"/userpages/edituser?userid={user.UserId}")">Edit</a> |
-        <a href="@($"/users/delete?userid={user.UserId}")">Delete</a>
+        <a href="@($"/user/edit?userid={user.UserId}")">Edit</a> |
+        <a href="@($"/user/delete?userid={user.UserId}")">Delete</a>
     </TemplateColumn>
 </QuickGrid>
 
