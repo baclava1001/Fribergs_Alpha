@@ -1,0 +1,106 @@
+﻿@page "/book"
+@inject IBooking BookingRepository
+@inject ICar CarRepository
+@inject ICarCategory CategoryRepository
+
+<PageTitle>Book</PageTitle>
+
+<h1 style="margin-left: 350px;">Book your car here!</h1>
+
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+
+            <EditForm Model="FilterData" FormName="FilterData" OnSubmit="ListAvailableCars" Enhance>
+
+                <label>
+                    Pickup date
+                    <InputDate @bind-Value="FilterData.FilterStartDate" />
+                </label>
+
+                <label>
+                    Return date
+                    <InputDate @bind-Value="FilterData.FilterEndDate" />
+                </label>
+
+                <label>
+                    Category
+                    <InputSelect @bind-Value="FilterData.CategoryId">
+
+                        <option value="none">
+                            Choose category
+                        </option>
+
+                        <option value="0">
+                            All
+                        </option>
+
+                        @foreach (var category in AvailableCategories)
+                        {
+                            <option value="@category.CarCategoryId">
+                                @category.Category
+                            </option>
+                        }
+
+                    </InputSelect>
+                </label>
+
+                <button type="submit" class="btn btn-primary">Find</button>
+
+            </EditForm>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @if (InputFault)
+            {
+                <span class="text text-danger">@Message</span>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <div class="row">
+
+        @if(FilteredCars.Count > 0)
+        {
+            @for (int i = 0; i < FilteredCars.Count; i++)
+            {
+                if (i > 0 && i % 3 == 0)
+                {
+                    @:</div><div class="row mt-3">
+                }
+                <div class="col">
+
+                    <div class="card bg-light mb-3" style="width:300px">
+
+                        <div class="card-header">
+                            <h4>@FilteredCars[i].Brand @FilteredCars[i].CarModel</h4>
+                        </div>
+
+                        <img class="card-img-top img-fluid" alt="@FilteredCars[i].CarModel" src="@FilteredCars[i].CarPicUrl" height="200" />
+
+                        <div class="card-body">
+                            <p>Daily cost: @FilteredCars[i].PricePerDay SEK</p>
+                            <p>Total: @(TotalCost(FilteredCars[i].PricePerDay)) SEK</p>
+
+                            <div class="row justify-content-start align-items-end">
+                                <div class="col-md-auto">
+                                    <a class="btn btn-primary" href="@($"/bookings/create/{FilteredCars[i].CarId}")">Book</a>
+                                </div>
+                                <div class="col-md-auto">
+                                    <a class="btn btn-secondary" href="@($"/cars/details/?carid={FilteredCars[i].CarId}")">Details</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        
+    </div>
+</div>

@@ -20,23 +20,21 @@
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            <input type="hidden" name="carid" value="carid" />    
-            <div class="mb-3">
-                <label for="pickupdate" class="form-label">Pickup Date:</label> 
-                <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
-                <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
-            </div>        
-            <div class="mb-3">
-                <label for="returndate" class="form-label">Return Date:</label> 
-                <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
-                <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
+            <input type="hidden" name="carid" value="carid" />
+            <div class="col-8"
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">Name:</label>
+                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
+                 </div>
+                <div class="mb-3">
+                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
+                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="totalsum" class="form-label">Total cost:</label>
-                <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
-                <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
-            </div>                   
-            <button type="submit" class="btn btn-primary">Book Now</button>
+            @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
+            <BookingCalculator Booking="@Booking"></BookingCalculator>
+            <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
 </div>
@@ -50,13 +48,12 @@
 
 
 @code {
-
-    [SupplyParameterFromForm]
-    public Booking Booking { get; set; } = new();
-
     // Get CarId from previous page
     [SupplyParameterFromQuery]
     public int CarId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Booking Booking { get; set; } = new();
 
     // Field variable to store user id
     private int _userId;
@@ -80,8 +77,6 @@
         Booking.User = userRepository.GetUserById(_userId);
 
         Booking.TotalSum = 0;
-        // Booking.PickUpDate = DateTime.Now;
-        // Booking.ReturnDate = DateTime.Now;
     }
 
     bool CarExists(int carid)

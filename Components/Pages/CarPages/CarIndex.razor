@@ -1,18 +1,21 @@
 ﻿@page "/cars"
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using Microsoft.EntityFrameworkCore
 @inject ICar carRepository
 @inject ICarCategory carCategoryRepository
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Our Cars</PageTitle>
 
-<h1>Index</h1>
+<h1>Our Cars</h1>
 
-<p>
-    <a href="cars/create">Create New</a>
-</p>
+<AuthorizeView Policy="AdminRoleRequired">
+    <Authorized>
+        <p>
+            <a href="cars/create">Create New</a>
+        </p>
+    </Authorized>
+</AuthorizeView>
 
 <QuickGrid Class="table" Items="Cars">
     <PropertyColumn Property="car => car.Category.Category" Title="Category" />

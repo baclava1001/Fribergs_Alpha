@@ -1,10 +1,9 @@
-﻿@page "/userpages/edituser"
+﻿@page "/user/edit"
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
-@attribute [Authorize(Policy = "AdminRoleRequired")]
 
 @inject IUserRepository UserRepo
 @inject NavigationManager NavigationManager
@@ -61,23 +60,31 @@
                 <InputText id="phonenumber" @bind-Value="User.PhoneNumber" class="form-control" />
                 <ValidationMessage For="() => User.PhoneNumber" class="text-danger" />
             </div>
-
-            <div class="mb-3 bg-danger p-1 text-center">
-                <InputCheckbox @bind-Value="User.AdminRole" />
-                <label for="adminrole" class="form-label">
-                    Grant user administrator rights?
-                </label>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save</button>
-
+            <AuthorizeView Policy="AdminRoleRequired">
+                <Authorized Context="authContext">
+                    <div class="mb-3 bg-danger p-1 text-center">
+                        <InputCheckbox @bind-Value="User.AdminRole" />
+                        <label for="adminrole" class="form-label">
+                            Grant user administrator rights?
+                        </label>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+            <button type="submit" class="btn btn-primary">Save</button> |
+            <AuthorizeView Policy="CustomerRoleRequired">
+                <Authorized Context="customer">
+                    <a href="/customer">Back</a> |
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Policy="AdminRoleRequired">
+                <Authorized Context="admin">
+                        <a href="/admin">Cancel</a>
+                </Authorized>
+            </AuthorizeView>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/userpages/users">Back to List</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]
@@ -99,8 +106,6 @@
 
     public void UpdateUser()
     {
-        // carRepository.UpdateUser(User!).State = EntityState.Modified;
-
         try
         {
             UserRepo.UpdateUser(User);
@@ -124,7 +129,7 @@
         }
         else
         {
-            NavigationManager.NavigateTo("/userpages/users/Customer");
+            NavigationManager.NavigateTo("/customer");
         }
     }
 
