@@ -9,11 +9,13 @@
 
 <PageTitle>Details</PageTitle>
 
-<h1>Details</h1>
+<h1>Car Details</h1>
+<hr />
+@* <h4>@car.Brand @car.CarModel (@car.Year)</h4> *@
+<img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" style="width: 350px; height: auto;" /><br /><br />
 
 <div>
-    <h4>@car.Brand @car.CarModel (@car.Year)</h4>
-    <hr />
+   
     @if (car is null)
     {
         <p><em>Loading...</em></p>
@@ -33,9 +35,9 @@
             <dt class="col-sm-2">Description</dt>
             <dd class="col-sm-10">@car.Description</dd>
             <dt class="col-sm-2">Price Per Day</dt>
-            <dd class="col-sm-10">@car.PricePerDay</dd>
+            <dd class="col-sm-10">@car.PricePerDay SEK</dd>
             @* <dt class="col-sm-2">Picture</dt> *@
-            <dd class="col-sm-10"><img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" /></dd>
+       @*      <dd class="col-sm-10"><img src="@car.CarPicUrl" alt="Picture of @car.CarModel" class="img-fluid" /></dd> *@
         </dl>
         <div>
             <AuthorizeView Policy="AdminRoleRequired">
