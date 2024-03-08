@@ -1,4 +1,4 @@
-﻿@page "/bookings/create/{carid:int?}/{datefrom?}/{dateto?}"
+﻿@page "/bookings/create/"
 @using System.Security.Claims
 @inject Fribergs_Alpha.Data.IBooking bookingRepository
 @inject Fribergs_Alpha.Data.ICar carRepository
@@ -44,42 +44,22 @@
 
 @code {
     // Get CarId from previous page
-    [Parameter]
+    [SupplyParameterFromQuery]
     public int CarId { get; set; }
 
-    // Get CarId from previous page
-    [Parameter]
-    public string? DateFrom { get; set; }
+    // Get date from previous page
+    [SupplyParameterFromQuery]
+    public string? DateFrom { get; set; } = null;
 
-    // Get CarId from previous page
-    [Parameter]
-    public string? DateTo { get; set; }
+    // Get date from previous page
+    [SupplyParameterFromQuery]
+    public string? DateTo { get; set; } = null;
 
     [SupplyParameterFromForm]
     public Booking Booking { get; set; } = new();
 
     // Field variable to store user id
     private int _userId;
-
-
-    // protected override void OnInitialized()
-    // {
-    //     // Retrieve car
-    //     if (CarExists(CarId))
-    //     {
-    //         Booking.Car = carRepository.GetCarById(CarId);
-    //     }
-    //     else
-    //     {
-    //         NavigationManager.NavigateTo("notfound");
-    //     }
-
-    //     // Store user id, then retrieve user
-    //     _userId = authService.GetUserIdAsync().Result;
-    //     Booking.User = userRepository.GetUserById(_userId);
-
-    //     Booking.TotalSum = 0;
-    // }
 
     // protected override void OnParametersSet()
     // {
@@ -102,9 +82,9 @@
     //     }
     // }
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        // Retrieve user
+        // Retrieve user-id, then user
         _userId = authService.GetUserIdAsync().Result;
         Booking.User = userRepository.GetUserById(_userId);
 
@@ -119,14 +99,27 @@
         }
 
         // Retrieve dates and total sum
-        if (DateFrom != null)
+        // TODO: Added ifs-and-buts - might delete later :-P 
+        
+        // If any of the date parameters weren't supplied
+        if (DateFrom == null || DateTo == null)
         {
+            // Set dates to now
+            var pickupDate = DateTime.Now;
+            var returnDate = DateTime.Now;
+        }
+        // If dates were correctly supplied
+        else
+        {
+            // Set variables to supplied dates
             var pickupDate = DateTime.Parse(DateFrom!);
             var returnDate = DateTime.Parse(DateTo!);
 
+            // Calsulate number of  days and total cost
             var days = (returnDate - pickupDate).TotalDays;
             var totalCost = Booking.Car.PricePerDay * days;
 
+            // Save values in Booking object
             Booking.PickUpDate = pickupDate;
             Booking.ReturnDate = returnDate;
             Booking.TotalSum = totalCost;
