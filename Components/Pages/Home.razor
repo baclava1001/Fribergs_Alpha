@@ -1,11 +1,81 @@
 ﻿@page "/"
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        #content {
+            text-align: center;
+        }
+
+        #testimonials {
+            margin-top: 50px; 
+        }
+
+        .testimonial-box {
+            background-color: #f9f9f9;
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+        }
+
+        .testimonial p {
+            font-size: 16px;
+        }
+
+        .testimonial strong {
+            font-weight: bold;
+        }
+
+        .cta-button{
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff6600;
+            color: #ffffff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover{
+            background-color: #ff8533;
+        }
+
+        .centre-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
 
 <PageTitle>Home</PageTitle>
 
 <div style="display: flex; justify-content: center; align-items: center;">
     <div>
         <h1>Welcome to Fribergs!</h1>
-        <h2>The best rental cars, for the best price!</h2>
+        <h2>The best rental cars, for the best price!<a href="/book" class="cta-button">Book Now!</a></h2>
         <img src="https://i.imgur.com/7o6cHcF.png" alt="MainLogo" width="500px" height="500px" />
+    </div>
+</div>
+
+<div id="testimonials">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonial-box">
+        <div class="testimonial">
+            <p>"Great service! The car was clean and well-maintained. Will definitely rent from Fribergs again!"</p>
+            <p><strong>- John Doe</strong></p>
+        </div>
+    </div>
+    <div class="testimonial-box">
+        <div class="testimonial">
+            <p>"Booking process was quick and easy. The staff was friendly and helpful. Highly recommended!"</p>
+            <p><strong>- Jane Smith</strong></p>
+        </div>
     </div>
 </div>
