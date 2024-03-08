@@ -1,9 +1,10 @@
 ﻿@page "/user/delete"
-@inject IUserRepository UserRepository
 @using Fribergs_Alpha.Data
 @using Fribergs_Alpha.Models
-@inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@inject IUserRepository UserRepository
+@inject UserAuthService authService
+@inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Delete</PageTitle>
@@ -54,7 +55,7 @@
             </AuthorizeView>
             <AuthorizeView Policy="AdminRoleRequired">
                 <Authorized Context="authContext">
-                    <a href="userpages/users/">Back to List</a>
+                    <a href="/admin">Cancel</a>
                 </Authorized>
             </AuthorizeView>
         </EditForm>
@@ -81,8 +82,26 @@
     {
         if (user != null)
         {
-            UserRepository.DeleteUser(UserId!);
-            NavigationManager.NavigateTo("/logout");
+            // If user is a customer
+            if (!user.AdminRole)
+            {
+                // Delete and redirect to customer list
+                UserRepository.DeleteUser(UserId!);
+                NavigationManager.NavigateTo("/userpages/users/customer");
+            }
+            // If the user (customer or admin) is deleting their own account
+            else if (user.UserId == authService.GetUserIdAsync().Result)
+            {
+                // Delete and logout
+                UserRepository.DeleteUser(UserId!);
+                NavigationManager.NavigateTo("/logout");
+            }
+            else // If user is admin and not deleting their own account
+            {
+                // Delete and redirect to admin list
+                UserRepository.DeleteUser(UserId!);
+                NavigationManager.NavigateTo("/userpages/users/admin");
+            }
         }        
     }
 }
