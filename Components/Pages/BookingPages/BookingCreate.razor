@@ -9,29 +9,27 @@
 
 <PageTitle>Book car</PageTitle>
 
-<h1>Booking</h1>
-<h4>@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</h4>
+<h1>Create Booking</h1>
 <hr />
+
+<img src="@Booking.Car.CarPicUrl" alt="Picture of car" class="img-thumbnail" style="width: 350px; height: auto;" />
+<br />
+<br />
+<dl>
+    <dt class="col-sm-2">Car to rent:</dt>
+    <dd class="col-sm-2">@Booking.Car.Brand @Booking.Car.CarModel (@Booking.Car.Year)</dd>
+    <dt class="col-sm-2">Customers name:</dt>
+    <dd class="col-sm-10">@Booking.User.FirstName @Booking.User.LastName</dd>
+</dl>
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="Booking" OnValidSubmit="AddBooking" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <input type="hidden" name="carid" value="carid" />
-            <div class="col-8"
-                <div class="mb-3">
-                    <label for="firstname" class="form-label">Name:</label>
-                    <InputText disabled id="firstname" @bind-Value="Booking.User.FirstName" class="form-control" />
-                    <ValidationMessage For="() => Booking.User.FirstName" class="text-danger" />
-                 </div>
-                <div class="mb-3">
-                    <InputText disabled id="lastname" @bind-Value="Booking.User.LastName" class="form-control" />
-                    <ValidationMessage For="() => Booking.User.LastName" class="text-danger" />
-                </div>
-            </div>
             @*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
             <BookingCalculator Booking="@Booking"></BookingCalculator>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Book Now</button>
         </EditForm>
     </div>
 </div>

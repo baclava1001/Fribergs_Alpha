@@ -1,17 +1,17 @@
 ﻿@*BookingCalculator component: takes the pick up date and return date and recalculates the total sum accordingly*@
 
 <div class="mb-3">
-    <label for="pickupdate" class="form-label">PickUpDate:</label>
+    <label for="pickupdate" class="form-label">Pickup Date:</label>
     <input type="date" id="pickupdate" value="@Booking.PickUpDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnPickup class="form-control" />
     <ValidationMessage For="() => Booking.PickUpDate" class="text-danger" />
 </div>
 <div class="mb-3">
-    <label for="returndate" class="form-label">ReturnDate:</label>
+    <label for="returndate" class="form-label">Return Date:</label>
     <input type="date" id="returndate" value="@Booking.ReturnDate.ToString("yyyy-MM-dd")" @onchange=UpdateTotalSumOnReturn class="form-control" />
     <ValidationMessage For="() => Booking.ReturnDate" class="text-danger" />
 </div>
 <div class="mb-3">
-    <label for="totalsum" class="form-label">TotalSum:</label>
+    <label for="totalsum" class="form-label">Total cost:</label>
     <InputNumber disabled id="totalsum" @bind-Value="Booking.TotalSum" class="form-control" />
     <ValidationMessage For="() => Booking.TotalSum" class="text-danger" />
 </div>
