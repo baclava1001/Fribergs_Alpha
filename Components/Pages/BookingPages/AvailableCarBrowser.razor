@@ -53,7 +53,7 @@
         <div class="col">
             @if (InputFault)
             {
-                <span>@Message</span>
+                <span class="text text-danger">@Message</span>
             }
         </div>
     </div>
@@ -73,13 +73,13 @@
                 }
                 <div class="col">
 
-                    <div class="card bg-light mb-3" style="width:280px">
+                    <div class="card bg-light mb-3" style="width:300px">
 
                         <div class="card-header">
                             <h4>@FilteredCars[i].Brand @FilteredCars[i].CarModel</h4>
                         </div>
 
-                        <img class="card-img-top img-fluid" alt="@FilteredCars[i].CarModel" src="@FilteredCars[i].CarPicUrl" height="160" />
+                        <img class="card-img-top img-fluid" alt="@FilteredCars[i].CarModel" src="@FilteredCars[i].CarPicUrl" height="200" />
 
                         <div class="card-body">
                             <p>Daily cost: @FilteredCars[i].PricePerDay SEK</p>

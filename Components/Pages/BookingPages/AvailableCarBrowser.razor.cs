@@ -36,34 +36,48 @@ namespace Fribergs_Alpha.Components.Pages.BookingPages
 
         public void ListAvailableCars()
         {
-            var allCars = CarRepository.GetAllCars().ToList();
-
-            // (Start A <= End B) && (End A >= Start B) = Overlap
-            ConflictingBookings = AllFutureBookings
-                .Where(x => x.PickUpDate <= FilterData.FilterEndDate &&
-                      x.ReturnDate >= FilterData.FilterStartDate)
-                .ToList();
-
-            foreach (var booking in ConflictingBookings)
+            if (FilterData.FilterStartDate < FilterData.FilterEndDate && FilterData.FilterStartDate >= DateTime.Now.Date)
             {
-                OccupiedCars.Add(booking.Car!);
-            }
+                InputFault = false;
+                var allCars = CarRepository.GetAllCars().ToList();
 
-            AvailableCars = allCars.Except(OccupiedCars).ToList();
+                // (Start A <= End B) && (End A >= Start B) = Overlap
+                ConflictingBookings = AllFutureBookings
+                    .Where(x => x.PickUpDate <= FilterData.FilterEndDate &&
+                          x.ReturnDate >= FilterData.FilterStartDate)
+                    .ToList();
 
-            if (FilterData.CategoryId == 0)
-            {
-                FilteredCars = AvailableCars;
-            }
-            else
-            {
-                foreach (var car in AvailableCars)
+                foreach (var booking in ConflictingBookings)
                 {
-                    if (car.Category!.CarCategoryId == FilterData.CategoryId)
+                    OccupiedCars.Add(booking.Car!);
+                }
+
+                AvailableCars = allCars.Except(OccupiedCars).ToList();
+
+                if (FilterData.CategoryId == 0)
+                {
+                    FilteredCars = AvailableCars;
+                }
+                else
+                {
+                    foreach (var car in AvailableCars)
                     {
-                        FilteredCars.Add(car);
+                        if (car.Category!.CarCategoryId == FilterData.CategoryId)
+                        {
+                            FilteredCars.Add(car);
+                        }
                     }
                 }
+            }
+            else if (FilterData.FilterStartDate >= FilterData.FilterEndDate)
+            {
+                InputFault = true;
+                Message = "Return date must be greater than Pickup date";
+            }
+            else if (FilterData.FilterStartDate < DateTime.Now.Date)
+            {
+                InputFault = true;
+                Message = "Pickup date cannot be a historical date";
             }
         }
 
