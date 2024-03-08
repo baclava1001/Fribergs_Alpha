@@ -83,12 +83,44 @@
     //     Booking.TotalSum = 0;
     // }
 
+    // protected override void OnParametersSet()
+    // {
+    //     _userId = authService.GetUserIdAsync().Result;
+    //     Booking.User = userRepository.GetUserById(_userId);
+    //     Booking.Car = carRepository.GetCarById(CarId);
+
+    //     if (DateFrom != null)
+    //     {
+    //         var pickupDate = DateTime.Parse(DateFrom!);
+    //         var returnDate = DateTime.Parse(DateTo!);
+
+    //         var days = (returnDate - pickupDate).TotalDays;
+    //         var totalCost = Booking.Car.PricePerDay * days;
+
+    //         Booking.PickUpDate = pickupDate;
+    //         Booking.ReturnDate = returnDate;
+    //         Booking.Car = carRepository.GetCarById(CarId);
+    //         Booking.TotalSum = totalCost;
+    //     }
+    // }
+
     protected override void OnParametersSet()
     {
+        // Retrieve user
         _userId = authService.GetUserIdAsync().Result;
         Booking.User = userRepository.GetUserById(_userId);
-        Booking.Car = carRepository.GetCarById(CarId);
 
+        // Retrieve car
+        if (CarExists(CarId))
+        {
+            Booking.Car = carRepository.GetCarById(CarId);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+        // Retrieve dates and total sum
         if (DateFrom != null)
         {
             var pickupDate = DateTime.Parse(DateFrom!);
@@ -99,7 +131,6 @@
 
             Booking.PickUpDate = pickupDate;
             Booking.ReturnDate = returnDate;
-            Booking.Car = carRepository.GetCarById(CarId);
             Booking.TotalSum = totalCost;
         }
     }
